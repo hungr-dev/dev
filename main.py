@@ -2,16 +2,67 @@ from flask import Flask, url_for, g, request, jsonify, session
 import os
 import sqlite3
 from contextlib import closing
+import json
 
 DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+@app.route('/',methods=['GET'])
+def hungr():
+    return "hungr"
+
+def Restaurant(restaurant):
+    rest = {}
+    rest['id']=restaurant['id']
+    rest['name']=restaurant['name']
+    rest['address']=restaurant['address']
+    rest['phoneNumber']=restaurant['phone_number']
+    return json.dumps(rest)
+
+def Delivery(delivery):
+    deliv = {}
+    deliv['id'] = delivery['id']
+    deliv['location'] = delivery['delivery_location']
+    deliv['order_time'] = delivery['order_time']
+    deliv['restaurantID'] = delivery['restaurant_id']
+    deliv['creatorID'] = delivery['creator_member_id']
+    return json.dumps(deliv)
+
+def FoodItem(food, orderID, quantity):
+    item = {}
+    item['id'] = food['id']
+    item['name'] = food['name']
+    item['price'] = food['price']
+    item['order'] = orderID
+    item['quantity'] = quantity
+    return json.dumps(item)
+
+def Order(order, foods, owner):
+    ord = {}
+    ord['id'] = order['id']
+    ord['member'] = owner
+    ord['food_items'] = json.dumps(foods)
+    return json.dumps(ord)
+
+##no photo_url right now so just return facebook_id
+def Member(id):
+    member = query_db('SELECT * from members WHERE id=?',[id],one=True)
+    memb = {}
+    memb['id'] = member['id']
+    memb['name'] = member['name']
+    memb['photo_url'] = member['facebook_id']
+    return json.dumps(memb)
+
 
 @app.route('/get_delivery/<id>', methods=['GET','POST'])
 def get_delivery(id):
     delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
-    return jsonify(id=delivery['id'], location=delivery['delivery_location'], time=delivery['order_time'])
+    restID = delivery['restaurant_id']
+    restaurant = query_db('SELECT * from restaurants  WHERE id=?',[restID], one=True)
+    order = []
+
+    return jsonify(id=delivery['id'], restaurant=Restaurant(restaurant), order_time=delivery['order_time'], delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']))
 
 
 
