@@ -8,6 +8,12 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 
+@app.route('/get_delivery/<id>', methods=['GET','POST'])
+def get_delivery(id):
+    delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
+    return jsonify(id=delivery['id'], location=delivery['delivery_location'], time=delivery['order_time'])
+
+
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
