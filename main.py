@@ -3,7 +3,7 @@ import os
 import sqlite3
 from contextlib import closing
 
-DATABASE = os.path.join(os.path.dirname(__file__),"db","adventure.db")
+DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
 app.config.from_object(__name__)
 
