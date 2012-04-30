@@ -4,6 +4,42 @@ body {
 	margin: 0 auto;
 }
 
+a.button {
+	cursor: pointer;
+	display: block;
+	width: 100%;
+}
+
+a.create-button-wrapper {
+	background: url('../img/bluebutton.png') no-repeat left top;
+	bottom: 0px;
+	height: 36px;
+	position: absolute;
+}
+
+a.create-button-wrapper:hover {
+	background: url('../img/bluebutton.png') no-repeat left -36px;
+}
+
+ .create-button {
+	background: url('../img/bluebutton.png') no-repeat right -72px;
+	color: #fff;
+	display: block;
+	font-size: 12px;
+	font-weight: bold;
+	height: inherit;
+	text-align: center;
+}
+
+.create-button:hover {
+	background: url('../img/bluebutton.png') no-repeat right -108px;
+}
+
+.create-button span {
+	position: relative;
+	top: 12px;
+}
+
 #header {
 	background: transparent;
 	margin: 0;
@@ -32,7 +68,7 @@ body {
 }
 
 .result {
-	background: url('../img/resultbg.png') no-repeat top left;
+	background: url('../img/resultbg.png') no-repeat left top;
 	height: 135px;
 	margin: 0 auto;
 	max-width: 695px;
@@ -42,7 +78,7 @@ body {
 
 .result-content {
 	color: #333;
-	background: transparent url('../img/resultbg.png') no-repeat bottom right;
+	background: transparent url('../img/resultbg.png') no-repeat right bottom;
 	height: 135px;
 	margin: 0 auto;
 	max-width: inherit;
@@ -109,7 +145,7 @@ body {
 }
 
 #search-container {
-	background: url('../img/searchbox.png') no-repeat top left;
+	background: url('../img/searchbox.png') no-repeat left top;
 	height: 107px;
 	margin: 0 auto;
 	position: relative;

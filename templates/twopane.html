@@ -7,6 +7,7 @@
 	<script src="../static/js/underscore-min.js" type="text/javascript"></script>
 	<script src="../static/js/backbone.js" type="text/javascript"></script>
 
+	<!-- Load templates for Javascript views -->
 	<script id="search-html" type="text/template">
 		<div id="search-container">
 			<div id="search-box-container">
@@ -24,7 +25,11 @@
 					<div class="result-title"><%= result_name %></div>
 					<div class="result-cuisine"><%= result_cuisine %></div>
 				</div>
-				<div class="result-buttons"></div>
+				<div class="result-buttons">
+					<a class="create-button-wrapper button">
+						<div class="create-button"><span>CREATE ORDER</span></div>
+					</a>
+				</div>
 				<div class="clear"></div>
 			</div>
 		</div>
