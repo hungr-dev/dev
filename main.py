@@ -195,6 +195,8 @@ def food_item():
     return jsonify(f)
 #    return jsonify({'message':'post food item success create'})
 
+
+
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
 def connect_db():
