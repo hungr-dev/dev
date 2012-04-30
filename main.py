@@ -75,13 +75,11 @@ def Order(order, foods, owner):
     ord['food_items'] = json.dumps(foods)
     return ord
 
-##no photo_url right now so just return facebook_id
 def Member(id):
     member = query_db('SELECT * from members WHERE id=?',[id],one=True)
     memb = {}
     memb['id'] = member['id']
     memb['username'] = member['username']
-    memb['photo_url'] = member['facebook_id']
     return memb
 
 
