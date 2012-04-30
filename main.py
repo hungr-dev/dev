@@ -114,39 +114,75 @@ def delivery():
     if 'restaurant_id' in request.form.keys():
         restaurantID = request.form['restaurant_id']
     else:
-        return jsonify('No restaurant_id given')
+        return jsonify({'message':'No restaurant_id given'})
     if 'order_time' in request.form.keys():
         orderTime = request.form['order_time']
     else:
-        return jsonify('No order_time given')
+        return jsonify({'message':'No order_time given'})
     if 'delivery_location' in request.form.keys():
         deliveryLocation = request.form['delivery_location']
     else:
-        return jsonify('No delivery_location given')
+        return jsonify({'message':'No delivery_location given'})
 
     query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id) VALUES ("%s", "%s", "%s")' % (deliveryLocation, orderTime, restaurantID)
     update_db(query)
 
-    return jsonify({'message':'None'})
+    return jsonify({'message':'post delivery success'})
 
 @app.route('/food_item', methods=['POST'])
 def food_item():
     if 'delivery_id' not in request.form.keys():
-        return jsonify('No delivery id given')
+        return jsonify({'message':'No delivery id given'})
     if 'quantity' not in request.form.keys():
-        return jsonify('No quantity given')
+        return jsonify({'message':'No quantity given'})
     if 'name' not in request.form.keys():
-        return jsonify('No name given')
+        return jsonify({'message':'No name given'})
     if 'price' not in request.form.keys():
-        return jsonify('No price given')
+        return jsonify({'message':'No price given'})
+
+    memberID = 1
 
     delivery_id = request.form['delivery_id']
-    quantity = request.form['quantity']
+    quantity = int(request.form['quantity'])
     name = request.form['name']
     price = request.form['price']
 
+    restaurant_id = query_db('SELECT restaurant_id from deliveries WHERE id=?',[delivery_id],one=True)['restaurant_id']
+
     query = 'INSERT into food_items(name, price, restaurant_id) VALUES ("%s","%s","%s")' % (name, price, restaurant_id)
     update_db(query)
+
+    foodID = query_db('SELECT id from food_items WHERE name=? AND price=?',[name, price],one=True)['id']
+
+    for order in query_db('SELECT * from orders WHERE delivery_id=?',[delivery_id]):
+        #THIS NEEDS TO BE REPLACED WITH CURRENT USER ID, after AUTHENTICATION IMPLEMENTED
+        if order['member_id']==memberID:
+            for i in range(quantity):
+                update_db('INSERT into order_food_items(order_id, food_item_id) VALUES ("%s","%s")' % (order['id'], foodID))
+            f = {}
+            f['id'] = foodID
+            foodItem = query_db('SELECT * from food_items WHERE id=?',[foodID],one=True)
+            f['name'] = foodItem['name']
+            f['price'] = foodItem['price']
+            f['quantity'] = quantity
+            return jsonify(f)
+
+#            return jsonify({'message':'post food item success append'})
+
+    #if you get here, then there is no current order by this user for the specified delivery to add onto.  Creating a new order for user
+    update_db('INSERT into orders(delivery_id,member_id) VALUES ("%s","%s")' % (delivery_id,memberID))
+    orderID = query_db('SELECT id FROM orders WHERE delivery_id=? AND member_id=?',[delivery_id,memberID],one=True)['id']
+    for i in range(quantity):
+        update_db('INSERT into order_food_items(order_id, food_item_id) VALUES ("%s","%s")' % (orderID, foodID))
+    
+    f = {}
+    f['id'] = foodID
+    foodItem = query_db('SELECT * from food_items WHERE id=?',[foodID],one=True)
+    f['name'] = foodItem['name']
+    f['price'] = foodItem['price']
+    f['quantity'] = quantity
+    return jsonify(f)
+#    return jsonify({'message':'post food item success create'})
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
