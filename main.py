@@ -10,7 +10,7 @@ app.config.from_object(__name__)
 
 @app.route('/',methods=['GET'])
 def hungr():
-    return "hungr"
+    return '<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script></head><body>Hungr</body></html>'
 
 def Restaurant(restaurant):
     rest = {}
@@ -55,7 +55,7 @@ def Member(id):
     return memb
 
 
-@app.route('/get_delivery/<id>', methods=['GET'])
+@app.route('/delivery/<id>', methods=['GET'])
 def get_delivery(id):
     delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
     restID = delivery['restaurant_id']
@@ -81,7 +81,27 @@ def get_delivery(id):
                    delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']),
                    orders=order)
 
+#no creator_id yet.  need to do authentication
+#order_time also has to be given as a valid datetime object string format
+@app.route('/delivery',methods=['POST'])
+def delivery():
+    if 'restaurant_id' in request.form.keys():
+        restaurantID = request.form['restaurant_id']
+    else:
+        return jsonify('No restaurant_id given')
+    if 'order_time' in request.form.keys():
+        orderTime = request.form['order_time']
+    else:
+        return jsonify('No order_time given')
+    if 'delivery_location' in request.form.keys():
+        deliveryLocation = request.form['delivery_location']
+    else:
+        return jsonify('No delivery_location given')
 
+    query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id) VALUES ("%s", "%s", "%s")' % (deliveryLocation, orderTime, restaurantID)
+    update_db(query)
+
+    return jsonify({'message':'None'})
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
