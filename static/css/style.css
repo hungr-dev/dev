@@ -11,7 +11,7 @@ body {
 	width: 50%;
 }
 
-#order-pane {
+#delivery-pane {
 	background: #253237 url('../img/side_panel_grad.png') repeat-y left;
 	height: 100%;
 	margin: 0;
@@ -21,14 +21,65 @@ body {
 	width: 50%;
 }
 
-#search-results-wrapper {
+#results-wrapper {
 	left: 0;
 	height: 100%;
 	margin: 0;
 	overflow-y: auto;
 	position: fixed;
-	top: 100px;
+	top: 250px;
 	width: 50%;
+}
+
+.result {
+	background: url('../img/resultbg.png') no-repeat top left;
+	height: 135px;
+	margin: 0 auto;
+	max-width: 695px;
+	min-width: 595px;
+	position: relative;
+}
+
+.result-content {
+	color: #333;
+	background: transparent url('../img/resultbg.png') no-repeat bottom right;
+	height: 135px;
+	margin: 0 auto;
+	max-width: inherit;
+	min-width: inherit;
+}
+
+.result-buttons {
+	float: right;
+	height: 115px;
+	position: relative;
+	right: 10px;
+	top: 10px;
+	width: 144px;
+}
+
+.result-photo {
+	float: left;
+	height: 133px;
+	left: 1px;
+	position: relative;
+	top: 1px;
+	width: 135px;
+}
+
+.result-text {
+	float: left;
+	height: 115px;
+	left: 10px;
+	margin: 0 auto;
+	max-width: 375px;
+	min-width: 275px;
+	position: relative;
+	top: 10px;
+}
+
+.result-title {
+	font-weight: bold;
 }
 
 #search-box {
