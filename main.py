@@ -59,31 +59,38 @@ def Member(id):
     return memb
 
 
-@app.route('/delivery/<id>', methods=['GET'])
+@app.route('/delivery/<id>', methods=['GET','DELETE'])
 def get_delivery(id):
-    delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
-    restID = delivery['restaurant_id']
-    restaurant = query_db('SELECT * from restaurants  WHERE id=?',[restID], one=True)
-    order = []
-    for ord in query_db('SELECT * from orders WHERE delivery_id=?',[delivery['id']]):
-        temp_order = {}
-        foods = []
-        for food in query_db('SELECT food_item_id from order_food_items WHERE order_id=?',[ord['id']]):
-            f = {}
-            f['id'] = food['food_item_id']
-            foodItem = query_db('SELECT * from food_items WHERE id=?',[food['food_item_id']],one=True)
-            f['name'] = foodItem['name']
-            f['price'] = foodItem['price']
-            f['quantity'] = 1
-            foods.append(f)
-        temp_order['id'] = ord['id']
-        temp_order['food_items'] = foods
-        temp_order['member'] = Member(ord['member_id'])
-        order.append(temp_order)
+    if request.method == 'GET':
+        delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
+        restID = delivery['restaurant_id']
+        restaurant = query_db('SELECT * from restaurants  WHERE id=?',[restID], one=True)
+        order = []
+        for ord in query_db('SELECT * from orders WHERE delivery_id=?',[delivery['id']]):
+            temp_order = {}
+            foods = []
+            for food in query_db('SELECT food_item_id from order_food_items WHERE order_id=?',[ord['id']]):
+                f = {}
+                f['id'] = food['food_item_id']
+                foodItem = query_db('SELECT * from food_items WHERE id=?',[food['food_item_id']],one=True)
+                f['name'] = foodItem['name']
+                f['price'] = foodItem['price']
+                f['quantity'] = 1
+                foods.append(f)
+            temp_order['id'] = ord['id']
+            temp_order['food_items'] = foods
+            temp_order['member'] = Member(ord['member_id'])
+            order.append(temp_order)
 
-    return jsonify(id=delivery['id'], restaurant=Restaurant(restaurant), order_time=delivery['order_time'],
-                   delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']),
-                   orders=order)
+        return jsonify(id=delivery['id'], restaurant=Restaurant(restaurant), order_time=delivery['order_time'],
+                       delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']),
+                       orders=order)
+    elif request.method == 'DELETE':
+        update_db('DELETE from deliveries WHERE id=?',[id])
+        update_db('DELETE from orders WHERE delivery_id=?',[id])
+        return jsonify({'message':'deleted delivery'})
+    else:
+        return jsonify({'message':'NONE'})
 
 
 @app.route('/search/', methods = ['GET'])
@@ -195,6 +202,11 @@ def food_item():
     return jsonify(f)
 #    return jsonify({'message':'post food item success create'})
 
+
+
+
+#@app.route('/food_item/<id>', methods=['DELETE'])
+#def delete_food_item(id):
 
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
