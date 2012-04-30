@@ -59,9 +59,9 @@ a.create-button-wrapper:hover {
 
 #results-wrapper {
 	left: 0;
-	height: 100%;
+	height: 60%;
 	margin: 0;
-	overflow-y: auto;
+	overflow-y: scroll;
 	position: fixed;
 	top: 250px;
 	width: 50%;
@@ -71,6 +71,7 @@ a.create-button-wrapper:hover {
 	background: url('../img/resultbg.png') no-repeat left top;
 	height: 135px;
 	margin: 0 auto;
+	margin-bottom: 10px;
 	max-width: 695px;
 	min-width: 595px;
 	position: relative;

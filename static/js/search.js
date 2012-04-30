@@ -26,6 +26,10 @@ var SearchView = Backbone.View.extend({
 		$.get('search', {query: q}, function(data){
 			if (data.results.length > 0){
 				var results_list = [];
+
+				// Empty current results list
+				$('#results-wrapper').html('');
+
 				for (each in data.results){
 					var restaurant = data.results[each];
 					var result_model = new ResultModel(restaurant);
@@ -65,6 +69,6 @@ var ResultView = Backbone.View.extend({
 		}
 		var template = _.template($('#result-html').html(), viewData);
 
-		this.wrapper.html(template);
+		this.wrapper.append(template);
 	}
 });
