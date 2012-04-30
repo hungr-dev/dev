@@ -123,8 +123,9 @@ def delivery():
         deliveryLocation = request.form['delivery_location']
     else:
         return jsonify({'message':'No delivery_location given'})
+    creatorID = 1
 
-    query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id) VALUES ("%s", "%s", "%s")' % (deliveryLocation, orderTime, restaurantID)
+    query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id, creator_member_id) VALUES ("%s", "%s","%s", "%s")' % (deliveryLocation, orderTime, restaurantID, creatorID)
     update_db(query)
 
     return jsonify({'message':'post delivery success'})
