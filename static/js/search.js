@@ -1,9 +1,15 @@
 var SearchView = Backbone.View.extend({
-	model: SearchModel,
-
 	initialize: function(){
 		this.wrapper = $('#search-wrapper');
 		this.render();
+		var _this = this;
+
+		$('#search-box').keypress(function(e){
+			if (e.which === 13){
+				_this.search($('#search-box').val());
+			}
+		});
+
 	},
 	render: function(){
 		// Compile the template using underscore
@@ -12,28 +18,20 @@ var SearchView = Backbone.View.extend({
 		// Load the compiled HTML into the wrapper
 		this.wrapper.html(template);
 	},
-	events: {
-		'keypress input[type=text]': 'searchHandler'
-	},
-	searchHandler: function(e){
-		if (e.which === '13'){
-			model.search($('#search-box').val());
-		}
-	}
-
-});
-
-var SearchModel = Backbone.Model.extend({
 	search: function(searchTerm){
 		// Clean search term
 		var q = $.trim(searchTerm.toLowerCase());
 
 		// Call search controller
-		$.get('search', {query: q}, function(results){
-			if (results.length > 0){
-				for (each in results){
-					result_collection.push( new ResultModel(results[each]) );
+		$.get('search', {query: q}, function(data){
+			if (data.results.length > 0){
+				var results_list = [];
+				for (each in data.results){
+
+					results_list.push( new ResultModel(data.results[each]) );
 				}
+
+			var result_collection = new ResultCollection(results_list);
 			}
 		});
 	}
@@ -57,7 +55,7 @@ var ResultModel = Backbone.Model.extend({
 			cuisine: this.cuisine,
 			deliveries: this.deliveries
 		};
-		var resultView = new ResultView(viewData);
+		var result_view = new ResultView(viewData);
 	}
 });
 
