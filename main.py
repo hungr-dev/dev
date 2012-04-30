@@ -103,6 +103,25 @@ def delivery():
 
     return jsonify({'message':'None'})
 
+@app.route('/food_item', methods=['POST'])
+def food_item():
+    if 'delivery_id' not in request.form.keys():
+        return jsonify('No delivery id given')
+    if 'quantity' not in request.form.keys():
+        return jsonify('No quantity given')
+    if 'name' not in request.form.keys():
+        return jsonify('No name given')
+    if 'price' not in request.form.keys():
+        return jsonify('No price given')
+
+    delivery_id = request.form['delivery_id']
+    quantity = request.form['quantity']
+    name = request.form['name']
+    price = request.form['price']
+
+    query = 'INSERT into food_items(name, price, restaurant_id) VALUES ("%s","%s","%s")' % (name, price, restaurant_id)
+    update_db(query)
+
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
 def connect_db():
