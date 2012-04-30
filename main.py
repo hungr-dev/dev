@@ -1,4 +1,4 @@
-from flask import Flask, url_for, g, request, jsonify, session
+from flask import Flask, url_for, g, request, jsonify, session, render_template
 import os
 import sqlite3
 from contextlib import closing
@@ -10,7 +10,7 @@ app.config.from_object(__name__)
 
 @app.route('/',methods=['GET'])
 def hungr():
-    return '<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script></head><body>Hungr</body></html>'
+    return render_template('twopane.html')
 
 @app.route('/login',methods=['POST'])
 def login():
