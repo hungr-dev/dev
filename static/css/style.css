@@ -21,7 +21,7 @@ a.create-button-wrapper:hover {
 	background: url('../img/bluebutton.png') no-repeat left -36px;
 }
 
- .create-button {
+.create-button {
 	background: url('../img/bluebutton.png') no-repeat right -72px;
 	color: #fff;
 	display: block;
@@ -44,16 +44,6 @@ a.create-button-wrapper:hover {
 	background: transparent;
 	margin: 0;
 	position: fixed;
-	width: 50%;
-}
-
-#delivery-pane {
-	background: #253237 url('../img/side_panel_grad.png') repeat-y left;
-	height: 100%;
-	margin: 0;
-	overflow-y: auto;
-	position: fixed;
-	right: 0;
 	width: 50%;
 }
 
@@ -178,4 +168,23 @@ a.create-button-wrapper:hover {
 
 .clear {
 	clear: both;
+}
+
+/**
+ * Delivery pane
+ */
+
+#delivery-wrapper {
+	background: #253237 url('../img/side_panel_grad.png') repeat-y left;
+	height: 100%;
+	margin: 0;
+	overflow-y: auto;
+	position: fixed;
+	right: 0;
+	width: 50%;
+}
+#delivery {
+	margin: 40px;
+	background: white;
+	padding: 20px;
 }
