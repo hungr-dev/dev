@@ -13,7 +13,7 @@ var SearchView = Backbone.View.extend({
 		this.wrapper.html(template);
 	},
 	events: {
-		'keypress input': 'searchHandler'
+		'keypress input[type=text]': 'searchHandler'
 	},
 	searchHandler: function(e){
 		if (e.which === '13'){
