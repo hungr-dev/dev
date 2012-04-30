@@ -65,15 +65,9 @@ var ResultView = Backbone.View.extend({
 	render: function() {
 		var restaurant = this.model;
 		var viewData = {
-<<<<<<< HEAD
 			result_name : this.model.get('name'), 
 			result_cuisine : this.model.get('cuisine'),
 			result_address: this.model.get('address')
-=======
-			result_name: restaurant.get('name'), 
-			result_cuisine: restaurant.get('cuisine'),
-			result_address: this.model.get('address')
->>>>>>> dd24d9b4c0b4ec4d7ba0bf6c11a933c2778635d4
 		}
 		var template = _.template($('#result-html').html(), viewData);
 
