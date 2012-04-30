@@ -27,8 +27,11 @@ var SearchView = Backbone.View.extend({
 			if (data.results.length > 0){
 				var results_list = [];
 				for (each in data.results){
+					var restaurant = data.results[each];
+					var result_model = new ResultModel(restaurant);
+					var result_view = new ResultView({model: result_model});
 
-					results_list.push( new ResultModel(data.results[each]) );
+					results_list.push(result_model);
 				}
 
 			var result_collection = new ResultCollection(results_list);
@@ -48,15 +51,6 @@ var ResultModel = Backbone.Model.extend({
 		cuisine: "Not specified",
 		deliveries: []
 	},
-	initialize: function() {
-		var viewData = {
-			id: this.id,
-			name: this.name,
-			cuisine: this.cuisine,
-			deliveries: this.deliveries
-		};
-		var result_view = new ResultView(viewData);
-	}
 });
 
 var ResultView = Backbone.View.extend({
@@ -65,8 +59,12 @@ var ResultView = Backbone.View.extend({
 		this.render();
 	},
 	render: function() {
-		var displayData = {result_title: this.name, result_cuisine: this.cuisine};
-		var template = _.template($('#result-html').html(), displayData);
+		var viewData = {
+			result_name : this.model.get('name'), 
+			result_cuisine : this.model.get('cuisine')
+		}
+		var template = _.template($('#result-html').html(), viewData);
+
 		this.wrapper.html(template);
 	}
 });
