@@ -2,8 +2,15 @@ CREATE TABLE restaurants(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(32),
     address VARCHAR(50),
-    phone_number VARCHAR(10)
+    phone_number VARCHAR(10),
+    cuisine_id int,
+    FOREIGN KEY (cuisine_id) REFERENCES cuisine(id)
 );
+
+CREATE TABLE cuisine{
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(32)
+};
 
 CREATE TABLE food_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,9 +52,13 @@ CREATE TABLE order_food_items(
     FOREIGN KEY (food_item_id) REFERENCES food_items(id)
 );
 
-INSERT into restaurants(name, address, phone_number) VALUES ("Quan's Kitchen", "1026Commonwealth Ave, Boston, MA 02215", "6172327617");
-INSERT into restaurants(name, address, phone_number) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000");
-INSERT into restaurants(name, address, phone_number) VALUES ("Restaurant", "123 Main St", "6175550123");
+INSERT into cuisine(name) VALUES ("Chinese");
+INSERT into cuisine(name) VALUES ("Italian");
+INSERT into cuisine(name) VALUES ("American");
+
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Quan's Kitchen", "1026Commonwealth Ave, Boston, MA 02215", "6172327617", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000", 2);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Restaurant", "123 Main St", "6175550123", 1);
 
 INSERT into food_items(name, price, restaurant_id) VALUES ("General Gao's Chicken", "8.99", "1");
 INSERT into food_items(name, price, restaurant_id) VALUES ("Sesame Chicken", "9.79", "1");
