@@ -4,6 +4,13 @@ body {
 	margin: 0 auto;
 }
 
+#header {
+	background: transparent;
+	margin: 0;
+	position: fixed;
+	width: 50%;
+}
+
 #order-pane {
 	background: #253237 url('../img/side_panel_grad.png') repeat-y left;
 	height: 100%;
@@ -24,12 +31,61 @@ body {
 	width: 50%;
 }
 
+#search-box {
+	background: transparent;
+	border: 0;
+	color: #fff;
+	display: inline-block;
+	float: left;
+	font-size: 18px;
+	height: 30px;
+	left: 5px;
+	outline: none;
+	position: relative;
+	top: 5px;
+	width: 535px;
+	z-index: 1000;
+}
+
+#search-box-container {
+	background: #171717;
+	border: 1px solid #000;
+	height: 40px;
+	margin: 0 auto;
+	position: relative;
+	top: 20px;
+	width: 580px;
+}
+
+#search-container {
+	background: url('../img/searchbox.png') no-repeat top left;
+	height: 107px;
+	margin: 0 auto;
+	position: relative;
+	width: 623px;
+}
+
+.search-logo {
+	background: orange;
+	display: inline-block;
+	float: right;
+	height: 30px;
+	right: 5px;
+	position: relative;
+	top: 5px;
+	width: 30px;
+}
+
 #search-wrapper {
-	left: 0;
-	height: 150px;
-	margin: 0;
 	position: fixed;
+	top: 100px;
 	width: 50%;
+}
+
+#small-logo {
+	background: url('../img/hungr_small_logo.png') no-repeat 40px 40px;
+	height: 109px;
+	width: 154px;
 }
 
 .clear {

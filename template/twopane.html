@@ -1,10 +1,32 @@
 <html>
 <head>
 	<link rel="stylesheet" href="../static/css/style.css" type="text/css">
+
+	<!-- Load libraries -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="../static/js/underscore-min.js" type="text/javascript"></script>
+	<script src="../static/js/backbone.js" type="text/javascript"></script>
+
+	<script id="search-html" type="text/template">
+		<div id="search-container">
+			<div id="search-box-container">
+				<input id="search-box" type="text" value="Enter a restaurant name"/>
+				<div class="search-logo"></div>
+			</div>
+		</div>	
+	</script>
+
+	<script src="../static/js/search.js" type="text/javascript"></script>
+	<script src="../static/js/main.js" type="text/javascript"></script>
+
+
 	<title>hungr</title>
 </head>
 
 <body>
+	<div id="header">
+		<div id="small-logo"></div>
+	</div>
 
 	<div id="search-wrapper">
 	</div>
