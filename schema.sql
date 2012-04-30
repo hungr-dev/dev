@@ -52,13 +52,13 @@ CREATE TABLE order_food_items(
     FOREIGN KEY (food_item_id) REFERENCES food_items(id)
 );
 
-INSERT into cuisine(name) VALUES ("Chinese");
-INSERT into cuisine(name) VALUES ("Italian");
-INSERT into cuisine(name) VALUES ("American");
+INSERT into cuisine(name, id) VALUES ("Chinese", 1);
+INSERT into cuisine(name, id) VALUES ("Italian", 2);
+INSERT into cuisine(name, id) VALUES ("American", 3);
 
 INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Quan's Kitchen", "1026Commonwealth Ave, Boston, MA 02215", "6172327617", 1);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000", 2);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Restaurant", "123 Main St", "6175550123", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000", 3);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Sicilia's", "123 Main St", "6175550123", 2);
 
 INSERT into food_items(name, price, restaurant_id) VALUES ("General Gao's Chicken", "8.99", "1");
 INSERT into food_items(name, price, restaurant_id) VALUES ("Sesame Chicken", "9.79", "1");
