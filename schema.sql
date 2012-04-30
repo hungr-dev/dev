@@ -7,10 +7,10 @@ CREATE TABLE restaurants(
     FOREIGN KEY (cuisine_id) REFERENCES cuisine(id)
 );
 
-CREATE TABLE cuisine{
+CREATE TABLE cuisine(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(32)
-};
+);
 
 CREATE TABLE food_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,

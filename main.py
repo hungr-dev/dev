@@ -18,6 +18,9 @@ def Restaurant(restaurant):
     rest['name']=restaurant['name']
     rest['address']=restaurant['address']
     rest['phoneNumber']=restaurant['phone_number']
+
+    #sql query that takes cuisine ID and returns cuisine name
+    rest['cuisine']=query_db('select name from cuisine where id = ?',[restaurant['cuisine_id']],one=True)['name']
     return rest
 
 def Delivery(delivery):
@@ -81,7 +84,28 @@ def get_delivery(id):
                    delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']),
                    orders=order)
 
-
+@app.route('/search/', methods = ['GET'])
+def search():
+    searchterm = request.form['query']
+    ## need to search the following tables: restaurants, cuisine, food items
+    ## not the most efficient way to do it, but it'll work for now
+    resultset =set()
+    for r in query_db('SELECT * from restaurants where name LIKE ?', [searchterm],one=False):
+        resultset.add(r['id'])
+    for c in query_db('SELECT * from cuisine where name like ?', [searchterm], one=False):
+	#if matches cuisine, get every restaurant name that has that cuisine
+        for cr in query_db('SELECT * from restaurants where cuisine_id LIKE ?', [c['id']],one=FALSE):
+	    resultset.add(cr['id'])
+    for f in query_db('SELECT * from food_items where name LIKE ?',[searchterm],one=False):
+        #if a food item matches, return the restaurant for which it matches
+        #(yeah could probably just use joins)
+        for fr in query_db('SELECT * from restaurants where id=?',[f['restaurant_id']],one=FALSE):
+	    resultset.add(fr['id'])
+    #now that we have a result set, create restaurant objects and jsonify them
+    resultlist= list(resultset)
+    return resultlist
+     
+                    
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 
