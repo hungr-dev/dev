@@ -58,18 +58,31 @@ var ResultModel = Backbone.Model.extend({
 });
 
 var ResultView = Backbone.View.extend({
-	initialize: function(){
+	initialize: function() {
 		this.wrapper = $('#results-wrapper');
 		this.render();
 	},
 	render: function() {
+		var restaurant = this.model;
 		var viewData = {
+<<<<<<< HEAD
 			result_name : this.model.get('name'), 
 			result_cuisine : this.model.get('cuisine'),
 			result_address: this.model.get('address')
+=======
+			result_name: restaurant.get('name'), 
+			result_cuisine: restaurant.get('cuisine'),
+			result_address: this.model.get('address')
+>>>>>>> dd24d9b4c0b4ec4d7ba0bf6c11a933c2778635d4
 		}
 		var template = _.template($('#result-html').html(), viewData);
 
 		this.wrapper.append(template);
+		this.wrapper.find('div.result:last-child .create-button-wrapper').click(function () {
+			console.log(restaurant);
+			var delivery = new DeliveryModel({restaurant: restaurant});
+			var view = new DeliveryView({model: delivery});
+			view.render();
+		});
 	}
 });
