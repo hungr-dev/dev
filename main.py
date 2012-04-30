@@ -12,6 +12,32 @@ app.config.from_object(__name__)
 def hungr():
     return '<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script></head><body>Hungr</body></html>'
 
+@app.route('/login',methods=['POST'])
+def login():
+    login = query_db('SELECT * from members WHERE username = ? AND password = ?',[request.form['username'],request.form['password']],one=True)
+    if (login == None): 
+	return "login failed"
+    else:
+	session['id']=login['id'] 
+	return "login successful"
+    
+
+@app.route('/logout',methods=['POST'])
+def logout():
+    session.pop('id',None)
+    return "logout successful"
+
+@app.route('/create_user',methods=['POST'])
+def create_user():
+    # check if username is already taken
+    namecheck = query_db('SELECT * from members WHERE username = ?',[request.form['username']],one=True)
+    if namecheck: 
+	return "username taken"
+    else: 
+	update_db('INSERT INTO members (username, password) VALUES (?,?)',[request.form['username'],request.form['password']])
+        return "username created"
+    #insert into table
+
 def Restaurant(restaurant):
     rest = {}
     rest['id']=restaurant['id']
@@ -54,7 +80,7 @@ def Member(id):
     member = query_db('SELECT * from members WHERE id=?',[id],one=True)
     memb = {}
     memb['id'] = member['id']
-    memb['name'] = member['name']
+    memb['username'] = member['username']
     memb['photo_url'] = member['facebook_id']
     return memb
 
