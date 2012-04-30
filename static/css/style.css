@@ -77,6 +77,10 @@ a.create-button-wrapper:hover {
 	position: relative;
 }
 
+.result-address {
+	font-size: 14px;
+}
+
 .result-content {
 	color: #333;
 	background: transparent url('../img/resultbg.png') no-repeat right bottom;
@@ -84,6 +88,10 @@ a.create-button-wrapper:hover {
 	margin: 0 auto;
 	max-width: inherit;
 	min-width: inherit;
+}
+
+.result-cuisine {
+	font-size: 14px;
 }
 
 .result-buttons {
@@ -108,6 +116,7 @@ a.create-button-wrapper:hover {
 	float: left;
 	height: 115px;
 	left: 10px;
+	line-height: 1.2em;
 	margin: 0 auto;
 	max-width: 375px;
 	min-width: 275px;
