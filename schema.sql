@@ -22,8 +22,8 @@ CREATE TABLE food_items(
 
 CREATE TABLE members(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(32),
-    facebook_id INT
+    username VARCHAR(32),
+    password VARCHAR(32)
 );
 
 CREATE TABLE orders(
@@ -66,10 +66,10 @@ INSERT into food_items(name, price, restaurant_id) VALUES ("Fried Rice", "4.49",
 INSERT into food_items(name, price, restaurant_id) VALUES ("Pepperoni Pizza", "12.99", "2");
 INSERT into food_items(name, price, restaurant_id) VALUES ("Buffalo Wings", "5.99", "2");
 
-INSERT into members(name, facebook_id) VALUES ("Stephen", "123");
-INSERT into members(name, facebook_id) VALUES ("Ryan","321");
-INSERT into members(name, facebook_id) VALUES ("Andrew","4213");
-INSERT into members(name, facebook_id) VALUES ("Kamran","421332");
+INSERT into members(username, password) VALUES ("Stephen", "asdf1");
+INSERT into members(username, password) VALUES ("Ryan","asdf2");
+INSERT into members(username, password) VALUES ("Andrew","asdf3");
+INSERT into members(username, password) VALUES ("Kamran","asdf4");
 
 INSERT into orders(delivery_id, member_id) VALUES ("1","1");
 INSERT into orders(delivery_id, member_id) VALUES ("1","2");
