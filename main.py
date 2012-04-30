@@ -75,13 +75,11 @@ def Order(order, foods, owner):
     ord['food_items'] = json.dumps(foods)
     return ord
 
-##no photo_url right now so just return facebook_id
 def Member(id):
     member = query_db('SELECT * from members WHERE id=?',[id],one=True)
     memb = {}
     memb['id'] = member['id']
     memb['username'] = member['username']
-    memb['photo_url'] = member['facebook_id']
     return memb
 
 
@@ -166,7 +164,10 @@ def delivery():
         deliveryLocation = request.form['delivery_location']
     else:
         return jsonify({'message':'No delivery_location given'})
-    creatorID = 1
+    if not 'id' in session.keys():
+        return jsonify({'message':'Not logged in'})
+    
+    creatorID = session['id']
 
     query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id, creator_member_id) VALUES ("%s", "%s","%s", "%s")' % (deliveryLocation, orderTime, restaurantID, creatorID)
     update_db(query)
@@ -183,8 +184,10 @@ def food_item():
         return jsonify({'message':'No name given'})
     if 'price' not in request.form.keys():
         return jsonify({'message':'No price given'})
+    if not 'id' in session.keys():
+        return jsonify({'message':'Not logged in'})
 
-    memberID = 1
+    memberID = session['id']
 
     delivery_id = request.form['delivery_id']
     quantity = int(request.form['quantity'])

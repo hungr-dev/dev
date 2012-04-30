@@ -56,9 +56,17 @@ INSERT into cuisine(name, id) VALUES ("Chinese", 1);
 INSERT into cuisine(name, id) VALUES ("Italian", 2);
 INSERT into cuisine(name, id) VALUES ("American", 3);
 
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Quan's Kitchen", "1026Commonwealth Ave, Boston, MA 02215", "6172327617", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Quan's Kitchen", "1026 Commonwealth Ave, Boston, MA 02215", "6172327617", 1);
 INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000", 3);
 INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Sicilia's", "123 Main St", "6175550123", 2);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Teriyaki Kitchen", "3209 Boylston Street, Boston, MA 02215", "6171209321", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Oriental Garden", "1032 Beacon Street, Boston, MA 02215", "6172327617", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Panda plate", "5289 Massachusetts Ave, Boston, MA 02115", "6172327617", 1);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1033 Massachusetts Ave Cambridge, MA 02318", "6174412101", 3);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "64 Staniford Street Boston, MA 02114" , "6172480100", 3);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1400 Tremont St, Roxbury Crossing, MA 02120", "6175413525", 3);
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Scoozi Gourmet Pizza", "237 Newbury St. Boston, MA","6175359299",2); 
+INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Cinderella's Restaurant", "901 Main Street, Cambridge, MA 02139","6176039908",2); 
 
 INSERT into food_items(name, price, restaurant_id) VALUES ("General Gao's Chicken", "8.99", "1");
 INSERT into food_items(name, price, restaurant_id) VALUES ("Sesame Chicken", "9.79", "1");
