@@ -58,6 +58,12 @@ var ResultModel = Backbone.Model.extend({
 });
 
 var ResultView = Backbone.View.extend({
+	tagName: 'div',
+	className: 'result',
+	events: {
+		"dblclick": "",
+		"click .create-button": "createOrder"
+	},
 	initialize: function() {
 		this.wrapper = $('#results-wrapper');
 		this.render();
@@ -69,6 +75,7 @@ var ResultView = Backbone.View.extend({
 			result_cuisine : this.model.get('cuisine'),
 			result_address: this.model.get('address')
 		}
+		this.el
 		var template = _.template($('#result-html').html(), viewData);
 
 		this.wrapper.append(template);
@@ -78,5 +85,8 @@ var ResultView = Backbone.View.extend({
 			var view = new DeliveryView({model: delivery});
 			view.render();
 		});
+	},
+	createOrder: function () {
+		var order = new OrderModel({})
 	}
 });

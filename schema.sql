@@ -1,10 +1,21 @@
 CREATE TABLE restaurants(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(32),
-    address VARCHAR(50),
+    address_id VARCHAR(50),
     phone_number VARCHAR(10),
     cuisine_id int,
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
     FOREIGN KEY (cuisine_id) REFERENCES cuisine(id)
+);
+
+CREATE TABLE addresses(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lat FLOAT(32),
+    lng FLOAT(32),
+    street VARCHAR(32),
+    city VARCHAR(32),
+    state VARCHAR(32),
+    zip VARCHAR(10)
 );
 
 CREATE TABLE cuisine(
@@ -56,17 +67,29 @@ INSERT into cuisine(name, id) VALUES ("Chinese", 1);
 INSERT into cuisine(name, id) VALUES ("Italian", 2);
 INSERT into cuisine(name, id) VALUES ("American", 3);
 
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Quan's Kitchen", "1026 Commonwealth Ave, Boston, MA 02215", "6172327617", 1);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1260 Boylston St", "6174249000", 3);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Sicilia's", "123 Main St", "6175550123", 2);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Teriyaki Kitchen", "3209 Boylston Street, Boston, MA 02215", "6171209321", 1);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Oriental Garden", "1032 Beacon Street, Boston, MA 02215", "6172327617", 1);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Panda plate", "5289 Massachusetts Ave, Boston, MA 02115", "6172327617", 1);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1033 Massachusetts Ave Cambridge, MA 02318", "6174412101", 3);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "64 Staniford Street Boston, MA 02114" , "6172480100", 3);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Domino's Pizza", "1400 Tremont St, Roxbury Crossing, MA 02120", "6175413525", 3);
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Scoozi Gourmet Pizza", "237 Newbury St. Boston, MA","6175359299",2); 
-INSERT into restaurants(name, address, phone_number, cuisine_id) VALUES ("Cinderella's Restaurant", "901 Main Street, Cambridge, MA 02139","6176039908",2); 
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "1026 Commonwealth Ave", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "1260 Boylston Street", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "123 Main Street", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "3209 Boylston Street", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "1032 Beacon Street", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "5289 Massachusetts Ave", "Boston", "MA", "02115");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "1033 Massachusetts Ave", "Boston", "MA", "02318");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "64 Staniford Street", "Boston", "MA", "02114");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "1400 Tremont Street", "Roxbury Crossing", "MA", "02120");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "237 Newbury Street", "Boston", "MA", "02215");
+INSERT INTO addresses(lat, lng, street, city, state, zip) VALUES (0, 0, "901 Main Street", "Cambridge", "MA", "02139");
+
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Quan's Kitchen", 1, "6172327617", 1);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Domino's Pizza", 2, "6174249000", 3);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Sicilia's", 3, "6175550123", 2);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Teriyaki Kitchen", 4, "6171209321", 1);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Oriental Garden", 5, "6172327617", 1);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Panda plate", 6, "6172327617", 1);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Domino's Pizza", 7, "6174412101", 3);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Domino's Pizza", 8, "6172480100", 3);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Domino's Pizza", 9, "6175413525", 3);
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Scoozi Gourmet Pizza", 10,"6175359299",2); 
+INSERT into restaurants(name, address_id, phone_number, cuisine_id) VALUES ("Cinderella's Restaurant", 11,"6176039908",2); 
 
 INSERT into food_items(name, price, restaurant_id) VALUES ("General Gao's Chicken", "8.99", "1");
 INSERT into food_items(name, price, restaurant_id) VALUES ("Sesame Chicken", "9.79", "1");
@@ -78,8 +101,6 @@ INSERT into members(username, password) VALUES ("Stephen", "asdf1");
 INSERT into members(username, password) VALUES ("Ryan","asdf2");
 INSERT into members(username, password) VALUES ("Andrew","asdf3");
 INSERT into members(username, password) VALUES ("Kamran","asdf4");
-
-
 
 INSERT into orders(delivery_id, member_id) VALUES ("1","1");
 INSERT into orders(delivery_id, member_id) VALUES ("1","2");

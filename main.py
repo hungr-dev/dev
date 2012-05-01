@@ -20,7 +20,7 @@ def login():
     else:
 	session['id']=login['id'] 
 	return "login successful"
-    
+
 
 @app.route('/logout/',methods=['POST'])
 def logout():
@@ -116,10 +116,12 @@ def get_delivery(id):
     else:
         return jsonify({'message':'NONE'})
 
-
 @app.route('/search/', methods = ['GET'])
 def search():
+<<<<<<< HEAD
     #do we have a routing issue?    
+=======
+>>>>>>> started on models in main.py
     searchterm = request.args['query']
     searchterm = "%"+searchterm+"%"
     ## need to search the following tables: restaurants, cuisine, food items
@@ -127,7 +129,7 @@ def search():
     result = []
     
     for r in query_db("SELECT * from restaurants where name LIKE ?", [searchterm]):
-	result.append(r['id'])
+        result.append(r['id'])
     for c in query_db("SELECT * from cuisine where name LIKE ?", [searchterm], one=False):
 	#if matches cuisine, get every restaurant name that has that cuisine
         for cr in query_db("SELECT * from restaurants where cuisine_id = ?", [c['id']],one=False):
@@ -145,9 +147,119 @@ def search():
         restaurantresults.append(Restaurant(restaurant))
     print restaurantresults    
     return jsonify(results=restaurantresults)
-    
-     
-                    
+
+class Restaurant:
+    """
+    A class representing a restaurant.
+
+    """
+    def __init__(self, id, name, address_id, phone, cuisine_id):
+        self.id = id
+        self.name = name
+        self.address_id = address_id
+        self.phone = phone
+        self.cuisine_id = cuisine_id
+
+    @staticmethod
+    def get_restaurant_by_id(id):
+        r = query_db("SELECT * FROM\
+            restaurants WHERE id = ?",
+            id, one=True)
+
+        return Restaurant(r['id'], 
+            r['name'],
+            r['address_id'],
+            r['phone_number'],
+            r['cuisine_id'])
+
+    def get_address(self):
+        return Address.get_address_by_id(address_id)
+
+class Address:
+    """
+    A class representing an address.
+
+    """
+    def __init__(self, id):
+        self.id = id
+        pass
+
+class Delivery:
+    """
+    A class representing a delivery.
+
+    """
+    def __init__(self, id):
+        self.id = id
+        self.delivery_location
+        self.order_time
+        self.restaurant_id
+        self.creator_member_id
+
+    @staticmethod
+    def get_delivery_by_id(id):
+        d = query_db("SELECT * FROM\
+            deliveries WHERE id = ?",
+            id, one=True)
+
+        return Delivery(d['id'], 
+            d['delivery_location'],
+            d['order_time'],
+            d['restaurant_id'],
+            d['creator_member_id'])     
+
+    @staticmethod
+    def get_deliveries_by_restaurant_id(id):
+        deliveries = query_db("SELECT id FROM\
+            deliveries WHERE restaurant_id = ?",
+            self.address_id, one=False)
+
+        out = []
+        for d in deliveries:
+            delivery_id = d['id']
+            out.append(Delivery.get_delivery_by_id(delivery_id))
+        return out
+
+class RestaurantSearch:
+    """
+    A class for restaurant searching.
+
+    Attributes:
+        query: A list of search terms
+    """
+    def __init__(self, query):
+        self.query = query
+
+    def searchDB(self):
+        """
+        Searches for search term matches on restaurant names, food names.
+
+        """
+        for searchTerm in self.query:
+            q = query_db("SELECT restaurant_hits.id, count(*)\
+                AS hits\
+                FROM\
+                    (SELECT restaurants.id \
+                    FROM\
+                    cuisine\
+                    LEFT JOIN restaurants\
+                    ON restaurants.cuisine_id = cuisine.id\
+                    WHERE cuisine.name LIKE ?\
+                    UNION ALL\
+                    SELECT restaurants.id\
+                    FROM\
+                    restaurants\
+                    LEFT JOIN food_items\
+                    ON restaurants.id = food_items.restaurant_id\
+                    WHERE food_items.name LIKE ?\
+                    UNION ALL\
+                    SELECT restaurants.id\
+                    FROM restaurants\
+                    WHERE restaurants.name LIKE ?)\
+                AS restaurant_hits\
+                GROUP BY id",
+                [searchTerm], one=False)
+                 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
 @app.route('/delivery/',methods=['POST'])
