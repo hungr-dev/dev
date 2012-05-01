@@ -12,7 +12,7 @@ app.config.from_object(__name__)
 def hungr():
     return render_template('twopane.html')
 
-@app.route('/login',methods=['POST'])
+@app.route('/login/',methods=['POST'])
 def login():
     login = query_db('SELECT * from members WHERE username = ? AND password = ?',[request.form['username'],request.form['password']],one=True)
     if (login == None): 
@@ -22,12 +22,12 @@ def login():
 	return "login successful"
     
 
-@app.route('/logout',methods=['POST'])
+@app.route('/logout/',methods=['POST'])
 def logout():
     session.pop('id',None)
     return "logout successful"
 
-@app.route('/create_user',methods=['POST'])
+@app.route('/create_user/',methods=['POST'])
 def create_user():
     # check if username is already taken
     namecheck = query_db('SELECT * from members WHERE username = ?',[request.form['username']],one=True)
@@ -119,7 +119,7 @@ def get_delivery(id):
 
 @app.route('/search/', methods = ['GET'])
 def search():
-    
+    #do we have a routing issue?    
     searchterm = request.args['query']
     searchterm = "%"+searchterm+"%"
     ## need to search the following tables: restaurants, cuisine, food items
@@ -150,7 +150,7 @@ def search():
                     
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
-@app.route('/delivery',methods=['POST'])
+@app.route('/delivery/',methods=['POST'])
 def delivery():
     if 'restaurant_id' in request.form.keys():
         restaurantID = request.form['restaurant_id']
@@ -174,7 +174,7 @@ def delivery():
 
     return jsonify({'message':'post delivery success'})
 
-@app.route('/food_item', methods=['POST'])
+@app.route('/food_item/', methods=['POST'])
 def food_item():
     if 'delivery_id' not in request.form.keys():
         return jsonify({'message':'No delivery id given'})
