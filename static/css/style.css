@@ -48,31 +48,33 @@ a.create-button-wrapper:hover {
 }
 
 .join-delivery-button {
-  background-color: #a5b8da;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a5b8da), color-stop(100%, #7089b3));
-  background-image: -webkit-linear-gradient(top, #a5b8da, #7089b3);
-  background-image: -moz-linear-gradient(top, #a5b8da, #7089b3);
-  background-image: -ms-linear-gradient(top, #a5b8da, #7089b3);
-  background-image: -o-linear-gradient(top, #a5b8da, #7089b3);
-  background-image: linear-gradient(top, #a5b8da, #7089b3);
-  border-top: 1px solid #758fba;
-  border-right: 1px solid #6c84ab;
-  border-bottom: 1px solid #5c6f91;
-  border-left: 1px solid #6c84ab;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: inset 0 1px 0 0 #aec3e5;
-  -moz-box-shadow: inset 0 1px 0 0 #aec3e5;
-  box-shadow: inset 0 1px 0 0 #aec3e5;
-  color: #fff;
-  display: inline-block;
-  font: bold 11px "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-  line-height: 1;
-  padding: 5px;
-  text-align: center;
-  text-shadow: 0 -1px 1px #64799e;
-  text-transform: uppercase;
+ 	background-color: #a5b8da;
+  	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a5b8da), color-stop(100%, #7089b3));
+  	background-image: -webkit-linear-gradient(top, #a5b8da, #7089b3);
+  	background-image: -moz-linear-gradient(top, #a5b8da, #7089b3);
+  	background-image: -ms-linear-gradient(top, #a5b8da, #7089b3);
+  	background-image: -o-linear-gradient(top, #a5b8da, #7089b3);
+  	background-image: linear-gradient(top, #a5b8da, #7089b3);
+  	border-top: 1px solid #758fba;
+  	border-right: 1px solid #6c84ab;
+  	border-bottom: 1px solid #5c6f91;
+  	border-left: 1px solid #6c84ab;
+  	-webkit-border-radius: 3px;
+  	-moz-border-radius: 3px;
+  	border-radius: 3px;
+  	-webkit-box-shadow: inset 0 1px 0 0 #aec3e5;
+  	-moz-box-shadow: inset 0 1px 0 0 #aec3e5;
+  	box-shadow: inset 0 1px 0 0 #aec3e5;
+  	color: #fff;
+  	display: inline-block;
+  	font: bold 11px "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  	line-height: 1;
+  	margin-bottom: 3px;
+  	padding: 5px;
+  	text-align: center;
+  	text-shadow: 0 -1px 1px #64799e;
+  	text-transform: uppercase;
+  	width: 33px;
 }
 
 .join-delivery-button:hover {
