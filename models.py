@@ -236,7 +236,7 @@ class Search:
                     SELECT restaurants.id\
                     FROM restaurants\
                     WHERE restaurants.name LIKE ?",
-                    [searchTerm], one=False)
+                    [searchTerm, searchTerm, searchTerm], one=False)
             restaurant_ids.append([row['id'] for row in q])
 
         restaurant_ids_ranked = list(Counter(restaurants)).sort(reverse=True)
