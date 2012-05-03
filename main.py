@@ -38,51 +38,6 @@ def create_user():
         return "username created"
     #insert into table
 
-#def Restaurant(restaurant):
-#    rest = {}
-#    rest['id']=restaurant['id']
-#    rest['name']=restaurant['name']
-#    rest['address']=restaurant['address']
-#    rest['phoneNumber']=restaurant['phone_number']
-
-    #sql query that takes cuisine ID and returns cuisine name
-#    rest['cuisine']=query_db('select name from cuisine where id = ?',[restaurant['cuisine_id']],one=True)['name']
-#    return rest
-
-def Delivery(delivery):
-    deliv = {}
-    deliv['id'] = delivery['id']
-    deliv['location'] = delivery['delivery_location']
-    deliv['order_time'] = delivery['order_time']
-    deliv['restaurantID'] = delivery['restaurant_id']
-    deliv['creatorID'] = delivery['creator_member_id']
-    return deliv
-
-def FoodItem(food, orderID, quantity):
-    item = {}
-
-    item['id'] = food['id']
-    item['name'] = food['name']
-    item['price'] = food['price']
-    item['order'] = orderID
-    item['quantity'] = quantity
-    return item
-
-def Order(order, foods, owner):
-    ord = {}
-    ord['id'] = order['id']
-    ord['member'] = owner
-    ord['food_items'] = json.dumps(foods)
-    return ord
-
-def Member(id):
-    member = query_db('SELECT * from members WHERE id=?',[id],one=True)
-    memb = {}
-    memb['id'] = member['id']
-    memb['username'] = member['username']
-    return memb
-
-
 @app.route('/delivery/<id>', methods=['GET','DELETE'])
 def get_delivery(id):
     if request.method == 'GET':
@@ -116,7 +71,7 @@ def get_delivery(id):
     else:
         return jsonify({'message':'NONE'})
 
-@app.route('/search/', methods = ['GET'])
+@app.route('/search', methods = ['GET'])
 def search():
     searchterm = request.args['query']
     searchterm = "%"+searchterm+"%"
@@ -133,8 +88,9 @@ def search():
         rdict['cuisine'] = [c.name for c in restaurant.get_cuisines()]
         rdict['food_items'] = [fi.name for fi in restaurant.get_food_items()]
 	rdict['deliveries'] = [(d.id, d.order_time) for d in restaurant.get_deliveries()]
-        result.append[rdict]
-    return jsonify({'SearchResult':result})  
+        result.append(rdict)
+    print result
+    return jsonify(results=result)  
 
                  
 #no creator_id yet.  need to do authentication
