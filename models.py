@@ -114,7 +114,7 @@ class Delivery:
             [id], one=True)
 
         orders = []
-        for (o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False)):
+        for o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False):
             orders.append(Order.get_order_by_id(o['id']))
 
 
