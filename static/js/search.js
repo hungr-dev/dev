@@ -1,6 +1,7 @@
 var SearchView = Backbone.View.extend({
-	el: $('#search-wrapper'),
+	id: 'search-wrapper',
 	initialize: function(){
+		this.$el = $('#search-wrapper');
 		this.render();
 	},
 	render: function(){
@@ -8,19 +9,23 @@ var SearchView = Backbone.View.extend({
 		var template = _.template($('#search-html').html(), {});
 
 		// Load the compiled HTML into the wrapper
-		this.el.html(template);
+		this.$el.html(template);
+		return this;
 	},
 	events: {
 		'keypress #search-box' : 'searchEnter'
 	},
 	searchEnter: function(e){
-			if (e.which === 13){
-				this.search(this.el.find('#search-box').val());
-			}
+		if (e.which === 13){
+			this.search($('#search-box').val());
+		}
 	},
-	search: function(searchTerm){
+	search: function(searchTerms){
 		// Clean search term
-		var q = $.trim(searchTerm.toLowerCase());
+		var q = searchTerms.toLowerCase().split(' ').filter(function(el){
+			return el.length > 0;
+		});
+
 
 		// Call search controller
 		$.get('search', {query: q}, function(data){
@@ -51,40 +56,40 @@ var ResultCollection = Backbone.Collection.extend({
 var ResultModel = Backbone.Model.extend({
 	defaults: {
 		id: null,
-		name: "Not specified",
-		cuisine: "Not specified",
-		deliveries: []
+		address_city: "",
+		name: "",
+		cuisine: [],
+		deliveries: [],
+		food_items: [],
 	},
 });
 
 var ResultView = Backbone.View.extend({
-	el: $('results-wrapper'),
 	events: {
-		"dblclick": "",
-		"click .create-button": "createOrder"
+		'click .create-button': 'createOrder'
 	},
 	initialize: function() {
+		this.wrapper = $('#results-wrapper');
 		this.render();
 	},
 	render: function() {
 		var restaurant = this.model;
 		var viewData = {
+			result_id: this.model.get('id'),
 			result_name : this.model.get('name'), 
-			result_cuisine : this.model.get('cuisine'),
-			result_address: this.model.get('address')
+			result_food_items: this.model.get('food_items').join(', '),
+			result_cuisines : this.model.get('cuisine').join(', '),
+			result_address_city: this.model.get('address_city')
 		}
-		this.el
+
 		var template = _.template($('#result-html').html(), viewData);
 
-		this.wrapper.append(template);
-		this.wrapper.find('div.result:last-child .create-button-wrapper').click(function () {
-			console.log(restaurant);
-			var delivery = new DeliveryModel({restaurant: restaurant});
-			var view = new DeliveryView({model: delivery});
-			view.render();
-		});
+		this.$el.html(template);
+		this.wrapper.append(this.$el.html());
 	},
 	createOrder: function () {
-		var order = new OrderModel({})
+		var delivery = new DeliveryModel({restaurant: restaurant});
+		var view = new DeliveryView({model: delivery});
+		view.render();
 	}
 });
