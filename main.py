@@ -95,7 +95,7 @@ def search():
     return jsonify(results=result)  
 
 #adds a new delivery
-@app.route('/delivery/', methods = ['POST'])
+@app.route('/delivery', methods = ['POST'])
 def process_delivery():
     restaurantID = request.form['restaurantID']
     #userID = session['userID']
@@ -117,10 +117,10 @@ def update_delivery(id):
 #for now, no editing. just creates a new order, adds it to the delivery
 #creates a new food item for everything in here. 
 #then associates food items with orders 
-@app.route('/order/', methods = ['POST'])
+@app.route('/order', methods = ['POST'])
 def add_order():
     
-    deliveryid = request.form['deliveryID']
+    deliveryid = request.form['delivery_id']
     #userID = session['userID']
     userID = 1 #hardcoded for now
     
@@ -128,9 +128,12 @@ def add_order():
     
     return jsonify(orderID = orderID)
 
-@app.route('/fooditem/', methods = ['POST'])
+@app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
-    return jsonify(stub="stub")
+    orderid = request.form['order_id']
+    restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
+    fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
+    return jsonify(fooditem_id = fooditem_id)
 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
