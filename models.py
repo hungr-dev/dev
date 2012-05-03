@@ -147,8 +147,8 @@ class Delivery:
     
     @staticmethod 
     def update_delivery(deliveryID, param, value):
-        query = "UPDATE deliveries SET ? = ? WHERE id = ?"
-        update_db(query, [param, value, deliveryID])
+        query = "UPDATE deliveries SET " + param +" = ? WHERE id = ?"
+        update_db(query, [value, deliveryID])
         return True
 class Order:
     """
@@ -247,8 +247,8 @@ class FoodItem:
         return True        
     @staticmethod
     def update_fooditem(fooditemid, param, value):
-        query = "UPDATE food_items SET ? = ? WHERE id = ?"
-        update_db(query, [param, value, fooditemid])
+        query = "UPDATE food_items SET "+param+" = ? WHERE id = ?"
+        update_db(query, [value, fooditemid])
         return True
 
 class Restaurant:
