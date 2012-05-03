@@ -1,6 +1,12 @@
+var SearchModel = Backbone.Model.extend({
+	defaults: {
+		model: null,
+		deliveryView: null
+	}
+});
+
 var SearchView = Backbone.View.extend({
 	id: 'search-wrapper',
-	deliveryView: null,
 	initialize: function(){
 		this.$el = $('#search-wrapper');
 		this.render();
@@ -35,11 +41,12 @@ var SearchView = Backbone.View.extend({
 				$('#results-wrapper').html('');
 
 				for (each in data.results){
-					var restaurant = data.results[each];
-					var result_model = new ResultModel(restaurant);
-					var result_view = new ResultView({model: result_model});
-					result_view.deliveryView = that.deliveryView;
+					var restaurantModelData = data.results[each];
+					restaurantModelData.deliveryView = that.model.get('deliveryView');
 
+					var result_model = new ResultModel(restaurantModelData);
+
+					var result_view = new ResultView({model: result_model});
 					results_list.push(result_model);
 				}
 
@@ -56,19 +63,20 @@ var ResultCollection = Backbone.Collection.extend({
 var ResultModel = Backbone.Model.extend({
 	defaults: {
 		id: null,
-		address_city: "",
-		name: "",
+		address_city: '',
+		name: '',
 		cuisine: [],
 		deliveries: [],
 		food_items: [],
+		deliveryView: null
 	},
 });
 
 var ResultView = Backbone.View.extend({
 	className: 'result',
-	deliveryView: null,
 	events: {
-		'click .create-button-wrapper': 'createDelivery'
+		'click .create-button-wrapper': 'createDelivery',
+		'click .join-delivery-button': 'joinDelivery'
 	},
 	initialize: function() {
 		this.wrapper = $('#results-wrapper');
@@ -80,7 +88,8 @@ var ResultView = Backbone.View.extend({
 			result_name : restaurant.get('name'), 
 			result_food_items: restaurant.get('food_items').join(', '),
 			result_cuisines : restaurant.get('cuisine').join(', '),
-			result_address_city: restaurant.get('address_city')
+			result_address_city: restaurant.get('address_city'),
+			result_deliveries: restaurant.get('deliveries')
 		}
 
 		var template = _.template($('#result-html').html(), viewData);
@@ -89,10 +98,11 @@ var ResultView = Backbone.View.extend({
 		this.wrapper.append(this.el);
 	},
 	createDelivery: function () {
-		this.deliveryView.createDelivery(this.model.get('id'));
+		this.model.get('deliveryView').createDelivery(this.model.get('id'));
 	},
-	joinDelivery: function () {
-		//delivery_view.join_delivery
-		return;
+	joinDelivery: function(ev) {
+		console.log($(ev.target).attr('id'))
+		var deliveryId = $(ev.target).attr('id');
+		this.model.get('deliveryView').joinDelivery(deliveryId); 
 	}
 });
