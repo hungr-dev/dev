@@ -3,7 +3,8 @@ import os
 import sqlite3
 from contextlib import closing
 import json
-from models import Address, Delivery, FoodItem, Restaurant, Search
+from models import Address, Delivery, FoodItem, Restaurant, Search, Order
+import urlparse 
 
 DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
@@ -94,39 +95,43 @@ def search():
     return jsonify(results=result)  
 
 #adds a new delivery
-@app.route('/delivery', methods = ['POST'])
+@app.route('/delivery/', methods = ['POST'])
 def process_delivery():
-    deliveryLocation = request.form['delivery_location']
-    orderTime = request.form['order_time']
     restaurantID = request.form['restaurantID']
     #userID = session['userID']
     userID = 1 #hardcoded for now
-    createdDeliveryID =  Delivery.create_delivery(deliveryLocation, orderTime, restaurantID, userID)
+    createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, None)
     return jsonify(deliveryID = createdDeliveryID)
+
+#edits a delivery 
+@app.route('/delivery/<id>', methods=['PUT'])
+def update_delivery(id):
+    #needs to update location, datetime
+    if 'delivery_location' in request.form.keys():
+        Delivery.update_delivery(id, 'delivery_location', request.form['delivery_location'])
+    if 'order_time' in request.form.keys():
+        Delivery.update_delivery(id, 'order_time', request.form['order_time'])
+    return jsonify(success = "success")
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
 #creates a new food item for everything in here. 
 #then associates food items with orders 
-@app.route('/order', methods = ['POST'])
+@app.route('/order/', methods = ['POST'])
 def add_order():
-    deliveryid = request.form['delivery_id']
-    fooditems = request.form['fooditems']
+    
+    deliveryid = request.form['deliveryID']
     #userID = session['userID']
     userID = 1 #hardcoded for now
     
     orderID = Order.create_order(deliveryid, userID)
     
-    for fooditem in fooditems: 
-        fname = fooditem['name']
-        price = fooditem['price']
-        quantity = fooditem['quantity']
-        restaurantID = Delivery.get_delivery_by_id(deliveryid).restaurant_id
-        fooditemID = FoodItem.create_fooditem(fname, fprice, restaurantID)
-        
-        fooditem_order_ID = FoodItem.associate_fooditem_with_order(fooditemID, orderID, quantity)
     return jsonify(orderID = orderID)
-        
+
+@app.route('/fooditem/', methods = ['POST'])
+def add_fooditem():
+    return jsonify(stub="stub")
+
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
 @app.route('/deliveryold/',methods=['POST'])
@@ -211,10 +216,6 @@ def food_item():
 #    return jsonify({'message':'post food item success create'})
 
 
-
-
-#@app.route('/food_item/<id>', methods=['DELETE'])
-#def delete_food_item(id):
 
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"

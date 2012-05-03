@@ -134,7 +134,12 @@ class Delivery:
         result = query_db(query, [], one=True)
         
 	return result['deliveryid']
-
+    
+    @staticmethod 
+    def update_delivery(deliveryID, param, value):
+        query = "UPDATE deliveries SET ? = ? WHERE id = ?"
+        update_db(query, [param, value, deliveryID])
+        return True
 class Order:
     """
     A class representing an order. 
