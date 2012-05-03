@@ -92,12 +92,13 @@ class Delivery:
 
     """
     def __init__(self, id, delivery_location, order_time, 
-        restaurant_id, creator_member_id):
+        restaurant_id, creator_member_id, orders=[]):
         self.id = id
         self.delivery_location = delivery_location
         self.order_time = order_time
         self.restaurant_id = restaurant_id
         self.creator_member_id = creator_member_id
+        self.orders = orders
 
     def serializable(self):
         d = self.__dict__
@@ -111,11 +112,18 @@ class Delivery:
             deliveries WHERE id = ?",
             [id], one=True)
 
+        orders = []
+        for (o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False)):
+            orders.append(Order.get_order_by_id(o['id']))
+
+
+
         return Delivery(d['id'], 
             d['delivery_location'],
             d['order_time'],
             d['restaurant_id'],
-            d['creator_member_id'])     
+            d['creator_member_id'],
+            orders)     
 
     @staticmethod
     def get_deliveries_by_restaurant_id(id):
