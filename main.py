@@ -3,7 +3,7 @@ import os
 import sqlite3
 from contextlib import closing
 import json
-from models import Address, Delivery, FoodItem, Restaurant
+from models import Address, Delivery, FoodItem, Restaurant, Search
 
 DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
