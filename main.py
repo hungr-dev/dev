@@ -14,7 +14,7 @@ app.config.from_object(__name__)
 def hungr():
     return render_template('twopane.html')
 
-@app.route('/login/',methods=['POST'])
+@app.route('/login',methods=['POST'])
 def login():
     login = query_db('SELECT * from members WHERE username = ? AND password = ?',[request.form['username'],request.form['password']],one=True)
     if (login == None): 
@@ -23,12 +23,12 @@ def login():
 	session['id']=login['id'] 
 	return "login successful"
 
-@app.route('/logout/',methods=['POST'])
+@app.route('/logout',methods=['POST'])
 def logout():
     session.pop('id',None)
     return "logout successful"
 
-@app.route('/create_user/',methods=['POST'])
+@app.route('/create_user',methods=['POST'])
 def create_user():
     # check if username is already taken
     namecheck = query_db('SELECT * from members WHERE username = ?',[request.form['username']],one=True)
@@ -72,7 +72,7 @@ def get_delivery(id):
     else:
         return jsonify({'message':'NONE'})
 
-@app.route('/search/', methods = ['GET'])
+@app.route('/search', methods = ['GET'])
 def search():
     searchterms = request.args['query']
     searchterms = searchterms.split()
@@ -133,6 +133,9 @@ def add_order():
     
     return jsonify(order = Order.get_order_by_id(orderID))
 
+@app.route('/order/<id>', methods=['GET'])
+def get_order(id):
+    return jsonify(order = Order.get_order_by_id(id))
 
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
@@ -151,6 +154,10 @@ def update_fooditem(id):
         FoodItem.update_fooditem(id, 'price', request.json['price'])
     if 'quantity' in request.json.keys():
         FoodItem.update_fooditem(id, 'quantity', request.json['quantity'])
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(id))
+
+@app.route('/fooditem/<id>', methods = ['GET'])
+def get_fooditem(id):
     return jsonify(fooditem = FoodItem.get_food_item_by_id(id))
 
 #no creator_id yet.  need to do authentication
