@@ -102,7 +102,8 @@ class Delivery:
     def serializable(self):
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
-        d['membername'] = "Stephen"
+        d['orders'] = [order.serializable() for order in self.orders]
+	d['membername'] = "Stephen"
         return d
 
     @staticmethod
@@ -110,6 +111,10 @@ class Delivery:
         d = query_db("SELECT * FROM\
             deliveries WHERE id = ?",
             [id], one=True)
+
+        orders = []
+        for o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False):
+            orders.append(Order.get_order_by_id(o['id']))
 
         return Delivery(d['id'], 
             d['delivery_location'],
@@ -156,9 +161,11 @@ class Order:
         self.member_id = member_id
 
     def serializable(self):
-	d = self.__dict__
+        d = self.__dict__
         d['membername'] = "Stephen"
-	return d
+        d['fooditems'] = [fooditem.serializable() for fooditem in \
+        FoodItem.get_food_items_by_order_id(self.id).serializable()]
+        return d
 
     @staticmethod
     def create_order(deliveryid, memberid):
