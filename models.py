@@ -147,6 +147,8 @@ class Delivery:
     
     @staticmethod 
     def update_delivery(deliveryID, param, value):
+        if value == None:
+            return
         query = "UPDATE deliveries SET ? = ? WHERE id = ?"
         update_db(query, [param, value, deliveryID])
         return True
