@@ -65,6 +65,7 @@ CREATE TABLE order_food_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_id int,
     food_item_id int,
+    quantity int,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (food_item_id) REFERENCES food_items(id)
 );
@@ -127,7 +128,7 @@ INSERT into orders(delivery_id, member_id) VALUES ("1","3");
 INSERT into deliveries(delivery_location, order_time, restaurant_id, creator_member_id) VALUES ("Student Center", "18:34","1","1");
 INSERT into deliveries(delivery_location, order_time, restaurant_id, creator_member_id) VALUES ("Baker", "16:00","2","3");
 
-INSERT into order_food_items(order_id, food_item_id) VALUES ("1","1");
-INSERT into order_food_items(order_id, food_item_id) VALUES ("1","3");
-INSERT into order_food_items(order_id, food_item_id) VALUES ("2","1");
-INSERT into order_food_items(order_id, food_item_id) VALUES ("3","2");
+INSERT into order_food_items(order_id, food_item_id, quantity) VALUES ("1","1","1");
+INSERT into order_food_items(order_id, food_item_id, quantity) VALUES ("1","3","1");
+INSERT into order_food_items(order_id, food_item_id, quantity) VALUES ("2","1","2");
+INSERT into order_food_items(order_id, food_item_id, quantity) VALUES ("3","2","3");
