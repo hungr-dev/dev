@@ -42,12 +42,31 @@
 	<script id="delivery-html" type="text/template">
 		<div id="restaurant-info">
 			<h2 id="restaurant-name"><%= restaurantName %></h2>
+			<span id="restaurant-phone"><%= restaurantPhone %></span>
+			<address>
+				<%= restaurantAddress.street %><br />
+				<%= restaurantAddress.city %>, <%= restaurantAddress.state %>
+			</address>
 		</div>
-		<ul id="orders-wrapper">
-
-		</ul>
+		<form id="delivery-info">
+			<input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
+			<input type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+		</form>
 		<form id="order-form">
-
+			<ul id="your-food-items">
+				<% for (var i = 0; i < foodItems.length; i++) { %>
+					<li class="food-item">
+						<input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItems[i].quantity %>" placeholder="Qty." />
+						<input type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItems[i].name %>" placeholder="Dish name" />
+						<input type="text" name="food-item-<%= i %>-price" id="food-item-<%= i %>-price" value="<%= foodItems[i].price %>" placeholder="Price" />
+					</li>
+				<% } %>
+				<li class="food-item new-food-item">
+					<input type="text" name="food-item-new-quantity" id="food-item-new-quantity" placeholder="Qty." />
+					<input type="text" name="food-item-new-name" id="food-item-new-name" placeholder="Dish name" />
+					<input type="text" name="food-item-new-price" id="food-item-new-price" placeholder="Price" />
+				</li>
+			</ul>
 		</form>
 	</script>
 	<script id="delivery-initial-html" type="text/template">

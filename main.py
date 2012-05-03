@@ -72,7 +72,7 @@ def get_delivery(id):
     else:
         return jsonify({'message':'NONE'})
 
-@app.route('/search', methods = ['GET'])
+@app.route('/search/', methods = ['GET'])
 def search():
     searchterms = request.args['query']
     searchterms = searchterms.split()
@@ -165,7 +165,7 @@ def get_fooditem(id):
 @app.route('/deliveryold/',methods=['POST'])
 def delivery():
     if 'restaurant_id' in request.form.keys():
-        restaurantID = request.['restaurant_id']
+        restaurantID = request.form['restaurant_id']
     else:
         return jsonify({'message':'No restaurant_id given'})
     if 'order_time' in request.form.keys():
