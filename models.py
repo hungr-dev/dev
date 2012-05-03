@@ -17,6 +17,10 @@ with app.test_request_context():
     app.preprocess_request()
     # now you can use the g.db object
 
+def update_db(query, args=()):
+    g.db.execute(query,args)
+    g.db.commit()
+
 def query_db(query, args=(), one=False):
     cur = g.db.execute(query, args)
     rv = [dict((cur.description[idx][0], value)
@@ -122,10 +126,14 @@ class Delivery:
     @staticmethod
     def create_delivery(deliverylocation, ordertime, restaurantid, userid):
         query = "INSERT into deliveries (delivery_location, order_time,\
-		restaurant_id, creator_member_id) VALUES (?,?,?,?);\
-                SELECT sqlite3_last_insert_rowid() as deliveryid;"
-        result = query_db(query, [deliverylocation, ordertime, restaurantid, userid], one=True)
-        return result['deliveryid']
+		restaurant_id, creator_member_id) VALUES (?,?,?,?)"
+        update_db(query, [deliverylocation, ordertime, restaurantid, userid])
+        
+        query = "SELECT last_insert_rowid() as deliveryid from deliveries"
+        
+        result = query_db(query, [], one=True)
+        
+	return result['deliveryid']
 
 class Order:
     """
@@ -138,9 +146,10 @@ class Order:
 
     @staticmethod
     def create_order(deliveryid, memberid):
-        query = "INSERT into orders (delivery_id, member_id) VALUES (?,?);\
-	        SELECT sqlite3_last_insert_rowid() as orderid;"
-        result = query_db(query, [deliveryid, memberid], one = True)
+        query = "INSERT into orders (delivery_id, member_id) VALUES (?,?)"
+        update_db(query, [deliveryid, memberid])
+        query = "SELECT last_insert_rowid() as orderid from orders"
+        result = query_db(query,[],one=True)
         return result['orderid'] 
 
     @staticmethod 
@@ -186,16 +195,18 @@ class FoodItem:
     @staticmethod
     def create_fooditem(name, price, restaurantid):
         query = "INSERT into food_items (name, price, restaurant_id) VALUES\
-	        (?,?,?); select sqlite3_last_insert_rowid() as fooditemid;"
-        result = db_query(query, [name, price, restaurantid], one = True)
+	        (?,?,?)"
+        update_db(query, [name, price, restaurantid])
+        query = "select last_insert_rowid() as fooditemid from food_items"
+        result = query_db(query, [], one=True)
         return result['fooditemid']
 
     @staticmethod
     def associate_fooditem_with_order(fooditemid, orderid, quantity):
         query = "INSERT into order_food_items (order_id, food_item_id, quantity)\
-		VALUES (?,?,?); select sqlite3_last_insert_rowid() as resultid"
-        result = db_query(query, [fooditemid, orderid, quantity], one=True)
-        return result['resultid']
+		VALUES (?,?,?)"
+        update_db(query, [fooditemid, orderid, quantity])
+        
 
 class Restaurant:
     """
