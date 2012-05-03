@@ -71,7 +71,7 @@ def get_delivery(id):
     else:
         return jsonify({'message':'NONE'})
 
-@app.route('/search', methods = ['GET'])
+@app.route('/search/', methods = ['GET'])
 def search():
     searchterms = request.args['query']
     searchterms = searchterms.split()
