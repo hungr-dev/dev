@@ -98,12 +98,15 @@ class Delivery:
         self.order_time = order_time
         self.restaurant_id = restaurant_id
         self.creator_member_id = creator_member_id
+        self.orders = []
+        for o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False):
+            self.orders.append(Order.get_order_by_id(o['id']))
 
     def serializable(self):
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
         d['orders'] = [order.serializable() for order in self.orders]
-	d['membername'] = "Stephen"
+        d['membername'] = "Stephen"
         return d
 
     @staticmethod
@@ -111,10 +114,6 @@ class Delivery:
         d = query_db("SELECT * FROM\
             deliveries WHERE id = ?",
             [id], one=True)
-
-        orders = []
-        for o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False):
-            orders.append(Order.get_order_by_id(o['id']))
 
         return Delivery(d['id'], 
             d['delivery_location'],
@@ -211,6 +210,18 @@ class FoodItem:
     def get_food_items_by_restaurant_id(id):
         food_items = query_db("SELECT id FROM\
             food_items WHERE restaurant_id = ?",
+            [id], one=False)
+
+        out = []
+        for f in food_items:
+            food_id = f['id']
+            out.append(FoodItem.get_food_item_by_id(food_id))
+        return out
+
+    @staticmethod
+    def get_food_items_by_order_id(id):
+        food_items = query_db("SELECT id FROM\
+            food_items WHERE order_id = ?",
             [id], one=False)
 
         out = []
