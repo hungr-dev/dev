@@ -122,7 +122,9 @@ def add_order():
         quantity = fooditem['quantity']
         restaurantID = Delivery.get_delivery_by_id(deliveryid).restaurant_id
         fooditemID = FoodItem.create_fooditem(fname, fprice, restaurantID)
-    return jsonify(result = "foo")
+        
+        fooditem_order_ID = FoodItem.associate_fooditem_with_order(fooditemID, orderID, quantity)
+    return jsonify(orderID = orderID)
         
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
