@@ -5,3 +5,4 @@ $(document).ready(function(){
   var searchView = new SearchView({model: searchModel});
 
 });
+

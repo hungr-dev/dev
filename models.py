@@ -147,6 +147,7 @@ class Delivery:
     
     @staticmethod 
     def update_delivery(deliveryID, param, value):
+
         query = "UPDATE deliveries SET " + param +" = ? WHERE id = ?"
         update_db(query, [value, deliveryID])
         return True
@@ -163,7 +164,7 @@ class Order:
         d = self.__dict__
         d['membername'] = "Stephen"
         d['fooditems'] = [fooditem.serializable() for fooditem in \
-        FoodItem.get_food_items_by_order_id(self.id).serializable()]
+        FoodItem.get_food_items_by_order_id(self.id)]
         return d
 
     @staticmethod
@@ -193,6 +194,7 @@ class FoodItem:
 
     def serializable(self):
         d = self.__dict__
+        d['quantity'] = FoodItem.get_quantity(self.id)
         return d
     
     @staticmethod
@@ -220,15 +222,18 @@ class FoodItem:
 
     @staticmethod
     def get_food_items_by_order_id(id):
-        food_items = query_db("SELECT id FROM\
-            food_items WHERE order_id = ?",
-            [id], one=False)
-
+        food_items = query_db("SELECT food_item_id FROM\
+            order_food_items WHERE order_id = ?", [id],one=False)
         out = []
-        for f in food_items:
-            food_id = f['id']
+        for f in food_items: 
+            food_id=f['food_item_id']
             out.append(FoodItem.get_food_item_by_id(food_id))
         return out
+    
+    @staticmethod
+    def get_quantity(id):
+        return query_db("SELECT quantity from order_food_items where\
+                       food_item_id =?", [id], one=True)
     
     @staticmethod
     def create_fooditem(name, price, restaurantid):

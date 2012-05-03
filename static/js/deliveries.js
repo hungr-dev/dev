@@ -83,6 +83,10 @@ var LocationModel = Backbone.Model.extend({
  */
 var DeliveryView = Backbone.View.extend({
   model: null,
+  events: {
+    'blur #delivery-time': 'updateDeliveryTime',
+    'blur #delivery-location': 'updateDeliveryLocation',
+  },
   initialize: function() {
     this.setElement($('#delivery'));
     this.render();
@@ -100,14 +104,14 @@ var DeliveryView = Backbone.View.extend({
     } else {
       var foodItems;
       if (this.model.get('orders').length > 0) {
-        foodItems = this.model.get('orders')[0].get('food_items');
+        foodItems = this.model.get('orders').at(0).get('food_items');
       } else {
         foodItems = [];
       }
 
       viewData = {
-        orderTime: this.model.get('order_time'),
-        deliveryLocation: this.model.get('delivery_location'),
+        orderTime: (this.model.get('order_time') === null ? '' : this.model.get('order_time')),
+        deliveryLocation: (this.model.get('delivery_location') === null ? '' : this.model.get('delivery_location')),
         restaurantName: this.model.get('restaurant').get('name'),
         restaurantPhone: this.model.get('restaurant').get('phone'),
         restaurantAddress: this.model.get('restaurant').get('address'),
@@ -121,7 +125,7 @@ var DeliveryView = Backbone.View.extend({
 
     return this; // for method chaining
   },
-  createDelivery: function(restaurantID) {
+  createDelivery: function (restaurantID) {
     this.model = new DeliveryModel();
 
     var that = this;
@@ -133,7 +137,7 @@ var DeliveryView = Backbone.View.extend({
     });
     this.render();
   },
-  joinDelivery: function(deliveryID) {
+  joinDelivery: function (deliveryID) {
     this.model = new DeliveryModel({id: deliveryID});
 
     var that = this;
@@ -144,5 +148,11 @@ var DeliveryView = Backbone.View.extend({
       },
     });
     this.render();
+  },
+  updateDeliveryTime: function () {
+    this.model.save({order_time: this.$el.find('#delivery-time').val()});
+  },
+  updateDeliveryLocation: function () {
+    this.model.save({delivery_location: this.$el.find('#delivery-location').val()});
   }
 });
