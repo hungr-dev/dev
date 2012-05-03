@@ -38,16 +38,16 @@ def create_user():
         return "username created"
     #insert into table
 
-def Restaurant(restaurant):
-    rest = {}
-    rest['id']=restaurant['id']
-    rest['name']=restaurant['name']
-    rest['address']=restaurant['address']
-    rest['phoneNumber']=restaurant['phone_number']
+#def Restaurant(restaurant):
+#    rest = {}
+#    rest['id']=restaurant['id']
+#    rest['name']=restaurant['name']
+#    rest['address']=restaurant['address']
+#    rest['phoneNumber']=restaurant['phone_number']
 
     #sql query that takes cuisine ID and returns cuisine name
-    rest['cuisine']=query_db('select name from cuisine where id = ?',[restaurant['cuisine_id']],one=True)['name']
-    return rest
+#    rest['cuisine']=query_db('select name from cuisine where id = ?',[restaurant['cuisine_id']],one=True)['name']
+#    return rest
 
 def Delivery(delivery):
     deliv = {}
