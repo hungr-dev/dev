@@ -19,7 +19,6 @@
 	</script>
 
 	<script id="result-html" type="text/template">
-		<div class="result">
 			<div class="result-content">
 				<div class="result-photo"></div>
 				<div class="result-text">
@@ -30,13 +29,17 @@
 					<div class="result-food-items"><%= result_food_items %></div>
 				</div>
 				<div class="result-buttons">
+					<% _.each(result_deliveries, function(delivery){ %>
+						<a class="join-delivery-button" id=<%= delivery[0] %> >
+							<%= delivery[1] %>
+						</a>
+					<% }); %>
 					<a class="create-button-wrapper button">
 						<div class="create-button"><span>CREATE ORDER</span></div>
 					</a>
 				</div>
 				<div class="clear"></div>
 			</div>
-		</div>
 	</script>
 
 	<script id="delivery-html" type="text/template">
