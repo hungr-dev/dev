@@ -72,7 +72,6 @@ var ResultView = Backbone.View.extend({
 	render: function() {
 		var restaurant = this.model;
 		var viewData = {
-			result_id: this.model.get('id'),
 			result_name : this.model.get('name'), 
 			result_food_items: this.model.get('food_items').join(', '),
 			result_cuisines : this.model.get('cuisine').join(', '),
