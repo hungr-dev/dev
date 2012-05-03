@@ -212,9 +212,13 @@ class FoodItem:
         query = "INSERT into order_food_items (order_id, food_item_id)\
 		VALUES (?,?)"
         update_db(query, [fooditemid, orderid])
-        
+        return True        
     @staticmethod
-    def update_fooditem(fooditemid, 
+    def update_fooditem(fooditemid, param, value):
+        query = "UPDATE food_items SET ? = ? WHERE id = ?"
+        update_db(query, [param, value, fooditemid])
+        return True
+
 class Restaurant:
     """
     A class representing a restaurant.

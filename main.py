@@ -134,11 +134,18 @@ def add_fooditem():
     restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
     fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
     FoodItem.associate_fooditem_with_order(fooditem_id, orderid, 0)
-    return jsonify(fooditem_id = fooditem_id)
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(fooditem_id))
 
+#need to update fooditem name, price, quantity
 @app.route('/fooditem/<id>',methods=['PUT'])
 def update_fooditem(id):
-    return jsonify("stub"="stub")
+    if 'name' in request.json.keys():
+        FoodItem.update_fooditem(id, 'name',request.json['name'])
+    if 'price' in request.json.keys():
+        FoodItem.update_fooditem(id, 'price', request.json['price'])
+    if 'quantity' in request.json.keys():
+        FoodItem.update_fooditem(id, 'quantity', request.json['quantity'])
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(id))
 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
