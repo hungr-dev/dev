@@ -1,4 +1,5 @@
 $(document).ready(function(){
-  var search_view = new SearchView();
-  var delivery_view = new DeliveryView();
+  var deliveryView = new DeliveryView();
+  var searchView = new SearchView();
+  searchView.deliveryView = deliveryView;
 });

@@ -77,5 +77,8 @@ var DeliveryView = Backbone.View.extend({
 
     // Load the compiled HTML into the wrapper
     this.wrapper.html(template);
+  },
+  createDelivery: function(restaurant_id) {
+    // TODO
   }
 });

@@ -1,5 +1,6 @@
 var SearchView = Backbone.View.extend({
 	id: 'search-wrapper',
+	deliveryView: null,
 	initialize: function(){
 		this.$el = $('#search-wrapper');
 		this.render();
@@ -23,6 +24,7 @@ var SearchView = Backbone.View.extend({
 	search: function(searchTerm){
 		// Clean search term
 		var q = $.trim(searchTerm.toLowerCase());
+		var that = this;
 
 		// Call search controller
 		$.get('search', {'query': q}, function(data){
@@ -36,6 +38,7 @@ var SearchView = Backbone.View.extend({
 					var restaurant = data.results[each];
 					var result_model = new ResultModel(restaurant);
 					var result_view = new ResultView({model: result_model});
+					result_view.deliveryView = that.deliveryView;
 
 					results_list.push(result_model);
 				}
@@ -63,6 +66,10 @@ var ResultModel = Backbone.Model.extend({
 
 var ResultView = Backbone.View.extend({
 	className: 'result',
+	deliveryView: null,
+	events: {
+		'click .create-button-wrapper': 'createDelivery'
+	},
 	initialize: function() {
 		this.wrapper = $('#results-wrapper');
 		this.render();
@@ -79,18 +86,12 @@ var ResultView = Backbone.View.extend({
 		var template = _.template($('#result-html').html(), viewData);
 
 		this.$el.html(template);
-
-		var _this = this;
-		$(".create-button-wrapper").bind('click', function(){
-			_this.createDelivery();
-		});
-
-		this.wrapper.append(this.$el.html());
+		this.wrapper.append(this.el);
 	},
 	createDelivery: function () {
-		delivery_view.create_delivery(this.model.get('id'))
+		this.deliveryView.createDelivery(this.model.get('id'));
 	},
-	joinDelivery: function(){
+	joinDelivery: function () {
 		//delivery_view.join_delivery
 		return;
 	}
