@@ -154,6 +154,7 @@ class Order:
         self.delivery_id = delivery_id
         self.member_id = member_id
 
+
     @staticmethod
     def create_order(deliveryid, memberid):
         query = "INSERT into orders (delivery_id, member_id) VALUES (?,?)"
@@ -213,10 +214,15 @@ class FoodItem:
 
     @staticmethod
     def associate_fooditem_with_order(fooditemid, orderid, quantity):
-        query = "INSERT into order_food_items (order_id, food_item_id, quantity)\
-		VALUES (?,?,?)"
-        update_db(query, [fooditemid, orderid, quantity])
-        
+        query = "INSERT into order_food_items (order_id, food_item_id)\
+		VALUES (?,?)"
+        update_db(query, [fooditemid, orderid])
+        return True        
+    @staticmethod
+    def update_fooditem(fooditemid, param, value):
+        query = "UPDATE food_items SET ? = ? WHERE id = ?"
+        update_db(query, [param, value, fooditemid])
+        return True
 
 class Restaurant:
     """
