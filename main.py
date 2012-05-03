@@ -126,7 +126,7 @@ def add_order():
     
     orderID = Order.create_order(deliveryid, userID)
     
-    return jsonify(orderID = orderID)
+    return jsonify(order = Order.get_order_by_id(orderID))
 
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
@@ -138,7 +138,7 @@ def add_fooditem():
 
 @app.route('/fooditem/<id>',methods=['PUT'])
 def update_fooditem(id):
-    FoodItem.update_fooditem(id, 
+    return jsonify("stub"="stub")
 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
