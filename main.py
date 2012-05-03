@@ -95,9 +95,9 @@ def search():
     return jsonify(results=result)  
 
 #adds a new delivery
-@app.route('/delivery/', methods = ['POST'])
+@app.route('/delivery', methods = ['POST'])
 def process_delivery():
-    restaurantID = request.form['restaurantID']
+    restaurantID = request.json['restaurantID']
     #userID = session['userID']
     userID = 1 #hardcoded for now
     createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, None)
