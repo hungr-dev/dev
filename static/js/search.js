@@ -1,22 +1,22 @@
 var SearchView = Backbone.View.extend({
+	el: $('#search-wrapper'),
 	initialize: function(){
-		this.wrapper = $('#search-wrapper');
 		this.render();
-		var _this = this;
-
-		$('#search-box').keypress(function(e){
-			if (e.which === 13){
-				_this.search($('#search-box').val());
-			}
-		});
-
 	},
 	render: function(){
 		// Compile the template using underscore
 		var template = _.template($('#search-html').html(), {});
 
 		// Load the compiled HTML into the wrapper
-		this.wrapper.html(template);
+		this.el.html(template);
+	},
+	events: {
+		'keypress #search-box' : 'searchEnter'
+	},
+	searchEnter: function(e){
+			if (e.which === 13){
+				this.search(this.el.find('#search-box').val());
+			}
 	},
 	search: function(searchTerm){
 		// Clean search term
@@ -58,14 +58,12 @@ var ResultModel = Backbone.Model.extend({
 });
 
 var ResultView = Backbone.View.extend({
-	tagName: 'div',
-	className: 'result',
+	el: $('results-wrapper'),
 	events: {
 		"dblclick": "",
 		"click .create-button": "createOrder"
 	},
 	initialize: function() {
-		this.wrapper = $('#results-wrapper');
 		this.render();
 	},
 	render: function() {
