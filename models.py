@@ -110,7 +110,7 @@ class Delivery:
     @staticmethod
     def get_deliveries_by_restaurant_id(id):
         deliveries = query_db("SELECT id FROM\
-            deliveries WHERE restaurant_id = ?",
+            deliveries WHERE restaurant_id = ? ORDER BY order_time DESC",
             id, one=False)
 
         out = []
@@ -241,3 +241,4 @@ class Search:
 
         restaurant_ids_ranked = list(Counter(restaurants)).sort(reverse=True)
         restaurants_ranked = [Restaurant.get_restaurant_by_id(id) for id in restaurant_ids_ranked]
+        return restaurants_ranked

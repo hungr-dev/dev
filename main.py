@@ -122,27 +122,20 @@ def search():
     searchterm = "%"+searchterm+"%"
     ## need to search the following tables: restaurants, cuisine, food items
     ## not the most efficient way to do it, but it'll work for now
+    s = Search(searchterm)
+    restaurants_ranked = s.search_db()
     result = []
-    
-    for r in query_db("SELECT * from restaurants where name LIKE ?", [searchterm]):
-        result.append(r['id'])
-    for c in query_db("SELECT * from cuisine where name LIKE ?", [searchterm], one=False):
-	#if matches cuisine, get every restaurant name that has that cuisine
-        for cr in query_db("SELECT * from restaurants where cuisine_id = ?", [c['id']],one=False):
-	    result.append(cr['id'])
-    for f in query_db("SELECT * from food_items where name LIKE ?",[searchterm],one=False):
-        #if a food item matches, return the restaurant for which it matches
-        #(yeah could probably just use joins)
-        for fr in query_db("SELECT * from restaurants where id = ?",[f['restaurant_id']],one=False):
-	    result.append(fr['id'])
-    #now that we have a result set, create restaurant objects and jsonify them
-    result = list(set(result))
-    restaurantresults = []    
-    for r in result:
-        restaurant = query_db("SELECT * from restaurants where id = ?",[r],one=True)
-        restaurantresults.append(Restaurant(restaurant))
-    print restaurantresults    
-    return jsonify(results=restaurantresults)
+    for restaurant in restaurants_ranked:
+        rdict={}
+        rdict['id'] = restaurant.id
+	rdict['name'] = restaurant.name
+        rdict['address_city'] = restaurant.get_address().city
+        rdict['cuisine'] = [c.name for c in restaurant.get_cuisines()]
+        rdict['food_items'] = [fi.name for fi in restaurant.get_food_items()]
+	rdict['deliveries'] = [(d.id, d.order_time) for d in restaurant.get_deliveries()]
+        result.append[rdict]
+    return jsonify('SearchResult':result)  
+
                  
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
