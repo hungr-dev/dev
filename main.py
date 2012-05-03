@@ -100,7 +100,7 @@ def process_delivery():
     restaurantID = request.json['restaurantID']
     #userID = session['userID']
     userID = 1 #hardcoded for now
-    createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, None)
+    createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, userID)
     return jsonify(Delivery.get_delivery_by_id(createdDeliveryID).serializable())
 
 #edits a delivery 
@@ -111,12 +111,12 @@ def update_delivery(id):
         Delivery.update_delivery(id, 'delivery_location', request.json['delivery_location'])
     if 'order_time' in request.json.keys():
         Delivery.update_delivery(id, 'order_time', request.json['order_time'])
-    return jsonify(Delivery.get_delivery_by_id(id).__dict__)
+    return jsonify(Delivery.get_delivery_by_id(id).serializable())
 
 #gets a delivery 
 @app.route('/delivery/<id>', methods = ['GET'])
 def get_delivery(id):
-    return jsonify(delivery = Delivery.get_delivery_by_id(id))
+    return jsonify(delivery = Delivery.get_delivery_by_id(id).serializable())
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
@@ -131,11 +131,11 @@ def add_order():
     
     orderID = Order.create_order(deliveryid, userID)
     
-    return jsonify(order = Order.get_order_by_id(orderID))
+    return jsonify(order = Order.get_order_by_id(orderID).serializable())
 
 @app.route('/order/<id>', methods=['GET'])
 def get_order(id):
-    return jsonify(order = Order.get_order_by_id(id))
+    return jsonify(order = Order.get_order_by_id(id).serializable())
 
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
@@ -143,7 +143,7 @@ def add_fooditem():
     restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
     fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
     FoodItem.associate_fooditem_with_order(fooditem_id, orderid, 0)
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(fooditem_id))
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(fooditem_id).serializable())
 
 #need to update fooditem name, price, quantity
 @app.route('/fooditem/<id>',methods=['PUT'])
@@ -154,11 +154,11 @@ def update_fooditem(id):
         FoodItem.update_fooditem(id, 'price', request.json['price'])
     if 'quantity' in request.json.keys():
         FoodItem.update_fooditem(id, 'quantity', request.json['quantity'])
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(id))
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
 
 @app.route('/fooditem/<id>', methods = ['GET'])
 def get_fooditem(id):
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(id))
+    return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
