@@ -74,7 +74,7 @@ def get_delivery(id):
 @app.route('/search', methods = ['GET'])
 def search():
     searchterms = request.args['query']
-    searchterms = ["%"+searchterms+"%" for searchterms in searchterm]
+    searchterms = ["%"+searchterm+"%" for searchterm in searchterms]
     ## need to search the following tables: restaurants, cuisine, food items
     ## not the most efficient way to do it, but it'll work for now
     s = Search(searchterms)
