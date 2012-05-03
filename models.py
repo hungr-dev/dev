@@ -103,6 +103,7 @@ class Delivery:
     def serializable(self):
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
+        d['membername'] = "Stephen"
         return d
 
     @staticmethod
@@ -162,6 +163,10 @@ class Order:
         self.delivery_id = delivery_id
         self.member_id = member_id
 
+    def serializable(self):
+	d = self.__dict__
+        d['membername'] = "Stephen"
+	return d
 
     @staticmethod
     def create_order(deliveryid, memberid):
@@ -188,6 +193,10 @@ class FoodItem:
         self.price = price
         self.restaurant_id = restaurant_id
 
+    def serializable(self):
+        d = self.__dict__
+        return d
+    
     @staticmethod
     def get_food_item_by_id(id):
         f = query_db("SELECT * FROM\
