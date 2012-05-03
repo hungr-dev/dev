@@ -27,8 +27,8 @@ var DeliveryModel = Backbone.RelationalModel.extend({
     id: null,
     creator: null,
     restaurant: null,
-    orderTime: null,
-    deliveryLocation: null,
+    order_time: null,
+    delivery_location: null,
     orders: new OrderCollection([])
   },
   urlRoot: 'delivery',
@@ -36,14 +36,25 @@ var DeliveryModel = Backbone.RelationalModel.extend({
     type: Backbone.HasOne,
     key: 'restaurant',
     relatedModel: 'RestaurantModel',
+  }, {
+    type: Backbone.HasMany,
+    key: 'orders',
+    relatedModel: 'OrderModel',
+    collectionType: 'OrderCollection',
   }]
 });
 var OrderModel = Backbone.Model.extend({
   defaults: {
     id: null,
     member: "",
-    foodItems: new FoodItemCollection([])
+    food_items: new FoodItemCollection([])
   },
+  relations: [{
+    type: Backbone.HasMany,
+    key: 'food_items',
+    relatedModel: 'FoodItemModel',
+    collectionType: 'FoodItemCollection',
+  }]
 });
 var MemberModel = Backbone.Model.extend({
   defaults: {
@@ -86,9 +97,20 @@ var DeliveryView = Backbone.View.extend({
       console.log(this.model);
       html = _.template($('#delivery-loading-html').html());
     } else {
+      var foodItems;
+      if (this.model.get('orders').length > 0) {
+        foodItems = this.model.get('orders')[0].get('food_items');
+      } else {
+        foodItems = [];
+      }
+
       viewData = {
-        orderTime: this.model.get('orderTime'),
+        orderTime: this.model.get('order_time'),
+        deliveryLocation: this.model.get('delivery_location'),
         restaurantName: this.model.get('restaurant').get('name'),
+        restaurantPhone: this.model.get('restaurant').get('phone'),
+        restaurantAddress: this.model.get('restaurant').get('address'),
+        foodItems: foodItems,
       }
       html = _.template($('#delivery-html').html(), viewData);
     }
