@@ -38,7 +38,7 @@ def create_user():
         return "username created"
     #insert into table
 
-@app.route('/delivery/<id>', methods=['GET','DELETE'])
+@app.route('/deliveryold/<id>', methods=['GET','DELETE'])
 def get_delivery(id):
     if request.method == 'GET':
         delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
@@ -73,11 +73,11 @@ def get_delivery(id):
 
 @app.route('/search', methods = ['GET'])
 def search():
-    searchterm = request.args['query']
-    searchterm = "%"+searchterm+"%"
+    searchterms = request.args['query']
+    searchterms = ["%"+searchterm+"%" for searchterms in searchterm]
     ## need to search the following tables: restaurants, cuisine, food items
     ## not the most efficient way to do it, but it'll work for now
-    s = Search(searchterm)
+    s = Search(searchterms)
     restaurants_ranked = s.search_db()
     result = []
     for restaurant in restaurants_ranked:
@@ -92,10 +92,43 @@ def search():
     print result
     return jsonify(results=result)  
 
-                 
+#adds a new delivery
+@app.route('/delivery', methods = ['POST'])
+def process_delivery():
+    deliveryLocation = request.form['delivery_location']
+    orderTime = request.form['order_time']
+    restaurantID = request.form['restaurantID']
+    #userID = session['userID']
+    userID = 1 #hardcoded for now
+    createdDeliveryID =  Delivery.create_delivery(deliveryLocation, orderTime, restaurantID, userID)
+    return jsonify(deliveryID = createdDeliveryID)
+
+#adds a new order to a delivery
+#for now, no editing. just creates a new order, adds it to the delivery
+#creates a new food item for everything in here. 
+#then associates food items with orders 
+@app.route('/order', methods = ['POST'])
+def add_order():
+    deliveryid = request.form['delivery_id']
+    fooditems = request.form['fooditems']
+    #userID = session['userID']
+    userID = 1 #hardcoded for now
+    
+    orderID = Order.create_order(deliveryid, userID)
+    
+    for fooditem in fooditems: 
+        fname = fooditem['name']
+        price = fooditem['price']
+        quantity = fooditem['quantity']
+        restaurantID = Delivery.get_delivery_by_id(deliveryid).restaurant_id
+        fooditemID = FoodItem.create_fooditem(fname, fprice, restaurantID)
+        
+        fooditem_order_ID = FoodItem.associate_fooditem_with_order(fooditemID, orderID, quantity)
+    return jsonify(orderID = orderID)
+        
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
-@app.route('/delivery/',methods=['POST'])
+@app.route('/deliveryold/',methods=['POST'])
 def delivery():
     if 'restaurant_id' in request.form.keys():
         restaurantID = request.form['restaurant_id']
@@ -119,7 +152,7 @@ def delivery():
 
     return jsonify({'message':'post delivery success'})
 
-@app.route('/food_item/', methods=['POST'])
+@app.route('/food_itemold/', methods=['POST'])
 def food_item():
     if 'delivery_id' not in request.form.keys():
         return jsonify({'message':'No delivery id given'})

@@ -119,6 +119,36 @@ class Delivery:
             out.append(Delivery.get_delivery_by_id(delivery_id))
         return out
 
+    @staticmethod
+    def create_delivery(deliverylocation, ordertime, restaurantid, userid):
+        query = "INSERT into deliveries (delivery_location, order_time,\
+		restaurant_id, creator_member_id) VALUES (?,?,?,?);\
+                SELECT sqlite3_last_insert_rowid() as deliveryid;"
+        result = query_db(query, [deliverylocation, ordertime, restaurantid, userid], one=True)
+        return result['deliveryid']
+
+class Order:
+    """
+    A class representing an order. 
+    """
+    def __init__(self, id, delivery_id, member_id):
+        self.id = id
+        self.delivery_id = delivery_id
+        self.member_id = member_id
+
+    @staticmethod
+    def create_order(deliveryid, memberid):
+        query = "INSERT into orders (delivery_id, member_id) VALUES (?,?);\
+	        SELECT sqlite3_last_insert_rowid() as orderid;"
+        result = query_db(query, [deliveryid, memberid], one = True)
+        return result['orderid'] 
+
+    @staticmethod 
+    def get_order_by_id(id):
+        order = query_db("SELECT * FROM orders WHERE id=?",\
+                         [id], one=True)
+        return Order(order['id'], order['delivery_id'], order['member_id'])
+
 class FoodItem:
     """
     A class representing a food item.
@@ -152,6 +182,20 @@ class FoodItem:
             food_id = f['id']
             out.append(FoodItem.get_food_item_by_id(food_id))
         return out
+    
+    @staticmethod
+    def create_fooditem(name, price, restaurantid):
+        query = "INSERT into food_items (name, price, restaurant_id) VALUES\
+	        (?,?,?); select sqlite3_last_insert_rowid() as fooditemid;"
+        result = db_query(query, [name, price, restaurantid], one = True)
+        return result['fooditemid']
+
+    @staticmethod
+    def associate_fooditem_with_order(fooditemid, orderid, quantity):
+        query = "INSERT into order_food_items (order_id, food_item_id, quantity)\
+		VALUES (?,?,?); select sqlite3_last_insert_rowid() as resultid"
+        result = db_query(query, [fooditemid, orderid, quantity], one=True)
+        return result['resultid']
 
 class Restaurant:
     """
