@@ -78,6 +78,7 @@ var DeliveryView = Backbone.View.extend({
     if (this.model === null) {
       html = _.template($('#delivery-initial-html').html());;
     } else if (this.model.get('restaurant') === null) {
+      console.log(this.model);
       html = _.template($('#delivery-loading-html').html());
     } else {
       viewData = {
@@ -93,6 +94,14 @@ var DeliveryView = Backbone.View.extend({
   },
   createDelivery: function(restaurantID) {
     this.model = new DeliveryModel();
-    this.model.save({restaurantID: restaurantID});
+
+    var that = this;
+    this.model.save({restaurantID: restaurantID}, {
+      success: function () {
+        console.log(that.model);
+        that.render();
+      },
+    });
+    this.render();
   }
 });
