@@ -99,6 +99,11 @@ class Delivery:
         self.restaurant_id = restaurant_id
         self.creator_member_id = creator_member_id
 
+    def serializable(self):
+        d = self.__dict__
+        d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
+        return d
+
     @staticmethod
     def get_delivery_by_id(id):
         d = query_db("SELECT * FROM\
@@ -229,6 +234,11 @@ class Restaurant:
         self.name = name
         self.address_id = address_id
         self.phone = phone
+
+    def serializable(self):
+        d = self.__dict__
+        d['address'] = Address.get_address_by_id(self.address_id).__dict__
+        return d
 
     @staticmethod
     def get_restaurant_by_id(id):

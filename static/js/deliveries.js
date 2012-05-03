@@ -87,7 +87,8 @@ var DeliveryView = Backbone.View.extend({
       html = _.template($('#delivery-loading-html').html());
     } else {
       viewData = {
-        restaurantName: this.model.get('restaurant').get('name')
+        orderTime: this.model.get('orderTime'),
+        restaurantName: this.model.get('restaurant').get('name'),
       }
       html = _.template($('#delivery-html').html(), viewData);
     }
