@@ -103,7 +103,8 @@ class Delivery:
     def serializable(self):
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
-        d['membername'] = "Stephen"
+        d['orders'] = [order.serializable() for order in self.orders]
+	d['membername'] = "Stephen"
         return d
 
     @staticmethod
@@ -166,7 +167,8 @@ class Order:
     def serializable(self):
 	d = self.__dict__
         d['membername'] = "Stephen"
-        d['fooditems'] = FoodItem.get_food_items_by_order_id(self.id)
+        d['fooditems'] = [fooditem.serializable() for fooditem in \
+		FoodItem.get_food_items_by_order_id(self.id).serializable()]
 	return d
 
     @staticmethod
