@@ -163,7 +163,7 @@ class Order:
         d = self.__dict__
         d['membername'] = "Stephen"
         d['fooditems'] = [fooditem.serializable() for fooditem in \
-        FoodItem.get_food_items_by_order_id(self.id).serializable()]
+        FoodItem.get_food_items_by_order_id(self.id)]
         return d
 
     @staticmethod
