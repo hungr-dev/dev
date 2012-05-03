@@ -134,7 +134,7 @@ def search():
         rdict['food_items'] = [fi.name for fi in restaurant.get_food_items()]
 	rdict['deliveries'] = [(d.id, d.order_time) for d in restaurant.get_deliveries()]
         result.append[rdict]
-    return jsonify('SearchResult':result)  
+    return jsonify({'SearchResult':result})  
 
                  
 #no creator_id yet.  need to do authentication
