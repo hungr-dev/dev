@@ -11,7 +11,7 @@ var FoodItemCollection = Backbone.Collection.extend({
 /**
  * Models used in the Delivery section:
  */
-var RestaurantModel = Backbone.Model.extend({
+var RestaurantModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
     name: "",
@@ -22,7 +22,7 @@ var RestaurantModel = Backbone.Model.extend({
     rating: 0
   },
 });
-var DeliveryModel = Backbone.Model.extend({
+var DeliveryModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
     creator: null,
@@ -32,6 +32,11 @@ var DeliveryModel = Backbone.Model.extend({
     orders: new OrderCollection([])
   },
   urlRoot: 'delivery',
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'restaurant',
+    relatedModel: 'RestaurantModel',
+  }]
 });
 var OrderModel = Backbone.Model.extend({
   defaults: {
