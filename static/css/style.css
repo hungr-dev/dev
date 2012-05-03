@@ -71,6 +71,15 @@ a.create-button-wrapper:hover {
 	font-size: 14px;
 }
 
+.result-buttons {
+	float: right;
+	height: 115px;
+	position: relative;
+	right: 10px;
+	top: 10px;
+	width: 144px;
+}
+
 .result-content {
 	color: #333;
 	background: transparent url('../img/resultbg.png') no-repeat right bottom;
@@ -80,17 +89,19 @@ a.create-button-wrapper:hover {
 	min-width: inherit;
 }
 
-.result-cuisine {
-	font-size: 14px;
+.result-cuisines {
+	font-size: 12px;
 }
 
-.result-buttons {
-	float: right;
-	height: 115px;
-	position: relative;
-	right: 10px;
-	top: 10px;
-	width: 144px;
+.result-divider {
+	background-color: #eee;
+	border: 0;
+	color: #eee;
+	height: 1px;
+}
+
+.result-food-items {
+	font-size: 12px;
 }
 
 .result-photo {

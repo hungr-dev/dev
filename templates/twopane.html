@@ -11,7 +11,7 @@
 	<script id="search-html" type="text/template">
 		<div id="search-container">
 			<div id="search-box-container">
-				<input id="search-box" type="text"/>
+				<input id="search-box" type="text" placeholder="Enter restaurants, cuisines, foods, etc."/>
 				<div class="search-logo"></div>
 			</div>
 		</div>	
@@ -23,9 +23,10 @@
 				<div class="result-photo"></div>
 				<div class="result-text">
 					<div class="result-name"><%= result_name %></div>
-					<div class="result-cuisines"><em><%= result_cuisines %></em></div>
-					<div class="result-food-items"><em><%= result_food_items %></em></div>
-					<div class="result-address"><%= result_address_city %></div>
+					<div class="result-address"><em><%= result_address_city %></em></div>
+					<hr class="result-divider"/>
+					<div class="result-cuisines"><%= result_cuisines %></div>
+					<div class="result-food-items"><%= result_food_items %></div>
 				</div>
 				<div class="result-buttons">
 					<a class="create-button-wrapper button">

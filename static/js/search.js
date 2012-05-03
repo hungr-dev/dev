@@ -62,9 +62,7 @@ var ResultModel = Backbone.Model.extend({
 });
 
 var ResultView = Backbone.View.extend({
-	events: {
-		'click .create-button': 'createOrder'
-	},
+	className: 'result',
 	initialize: function() {
 		this.wrapper = $('#results-wrapper');
 		this.render();
@@ -72,20 +70,28 @@ var ResultView = Backbone.View.extend({
 	render: function() {
 		var restaurant = this.model;
 		var viewData = {
-			result_name : this.model.get('name'), 
-			result_food_items: this.model.get('food_items').join(', '),
-			result_cuisines : this.model.get('cuisine').join(', '),
-			result_address_city: this.model.get('address_city')
+			result_name : restaurant.get('name'), 
+			result_food_items: restaurant.get('food_items').join(', '),
+			result_cuisines : restaurant.get('cuisine').join(', '),
+			result_address_city: restaurant.get('address_city')
 		}
 
 		var template = _.template($('#result-html').html(), viewData);
 
 		this.$el.html(template);
+
+		var _this = this;
+		$(".create-button-wrapper").bind('click', function(){
+			_this.createDelivery();
+		});
+
 		this.wrapper.append(this.$el.html());
 	},
-	createOrder: function () {
-		var delivery = new DeliveryModel({restaurant: restaurant});
-		var view = new DeliveryView({model: delivery});
-		view.render();
+	createDelivery: function () {
+		delivery_view.create_delivery(this.model.get('id'))
+	},
+	joinDelivery: function(){
+		//delivery_view.join_delivery
+		return;
 	}
 });
