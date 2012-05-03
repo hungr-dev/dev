@@ -20,15 +20,12 @@ var SearchView = Backbone.View.extend({
 			this.search($('#search-box').val());
 		}
 	},
-	search: function(searchTerms){
+	search: function(searchTerm){
 		// Clean search term
-		var q = searchTerms.toLowerCase().split(' ').filter(function(el){
-			return el.length > 0;
-		});
-console.log(q)
+		var q = $.trim(searchTerm.toLowerCase());
 
 		// Call search controller
-		$.get('search', {'query[]': q}, function(data){
+		$.get('search', {'query': q}, function(data){
 			if (data.results.length > 0){
 				var results_list = [];
 
