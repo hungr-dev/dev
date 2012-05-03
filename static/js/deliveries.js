@@ -100,14 +100,14 @@ var DeliveryView = Backbone.View.extend({
     } else {
       var foodItems;
       if (this.model.get('orders').length > 0) {
-        foodItems = this.model.get('orders')[0].get('food_items');
+        foodItems = this.model.get('orders').at(0).get('food_items');
       } else {
         foodItems = [];
       }
 
       viewData = {
-        orderTime: this.model.get('order_time'),
-        deliveryLocation: this.model.get('delivery_location'),
+        orderTime: (this.model.get('order_time') === null ? '' : this.model.get('order_time')),
+        deliveryLocation: (this.model.get('delivery_location') === null ? '' : this.model.get('delivery_location')),
         restaurantName: this.model.get('restaurant').get('name'),
         restaurantPhone: this.model.get('restaurant').get('phone'),
         restaurantAddress: this.model.get('restaurant').get('address'),

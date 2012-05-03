@@ -119,7 +119,7 @@ def update_delivery(id):
 #gets a delivery 
 @app.route('/delivery/<id>', methods = ['GET'])
 def get_delivery(id):
-    return jsonify(delivery = Delivery.get_delivery_by_id(id).serializable())
+    return jsonify(Delivery.get_delivery_by_id(id).serializable())
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
