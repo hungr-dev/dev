@@ -101,17 +101,17 @@ def process_delivery():
     #userID = session['userID']
     userID = 1 #hardcoded for now
     createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, None)
-    return jsonify(deliveryID = createdDeliveryID)
+    return jsonify(delivery = Delivery.get_delivery_by_id(createdDeliveryID))
 
 #edits a delivery 
 @app.route('/delivery/<id>', methods=['PUT'])
 def update_delivery(id):
     #needs to update location, datetime
-    if 'delivery_location' in request.form.keys():
-        Delivery.update_delivery(id, 'delivery_location', request.form['delivery_location'])
-    if 'order_time' in request.form.keys():
-        Delivery.update_delivery(id, 'order_time', request.form['order_time'])
-    return jsonify(success = "success")
+    if 'delivery_location' in request.json.keys():
+        Delivery.update_delivery(id, 'delivery_location', request.json['delivery_location'])
+    if 'order_time' in request.json.keys():
+        Delivery.update_delivery(id, 'order_time', request.json['order_time'])
+    return jsonify(delivery = Delivery.get_delivery_by_id(id))
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
@@ -120,7 +120,7 @@ def update_delivery(id):
 @app.route('/order', methods = ['POST'])
 def add_order():
     
-    deliveryid = request.form['delivery_id']
+    deliveryid = request.json['delivery_id']
     #userID = session['userID']
     userID = 1 #hardcoded for now
     
@@ -130,17 +130,22 @@ def add_order():
 
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
-    orderid = request.form['order_id']
+    orderid = request.json['order_id']
     restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
     fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
+    FoodItem.associate_fooditem_with_order(fooditem_id, orderid, 0)
     return jsonify(fooditem_id = fooditem_id)
+
+@app.route('/fooditem/<id>',methods=['PUT'])
+def update_fooditem(id):
+    FoodItem.update_fooditem(id, 
 
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
 @app.route('/deliveryold/',methods=['POST'])
 def delivery():
     if 'restaurant_id' in request.form.keys():
-        restaurantID = request.form['restaurant_id']
+        restaurantID = request.['restaurant_id']
     else:
         return jsonify({'message':'No restaurant_id given'})
     if 'order_time' in request.form.keys():
