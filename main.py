@@ -101,7 +101,7 @@ def process_delivery():
     #userID = session['userID']
     userID = 1 #hardcoded for now
     createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, None)
-    return jsonify(delivery = Delivery.get_delivery_by_id(createdDeliveryID))
+    return jsonify(Delivery.get_delivery_by_id(createdDeliveryID).serializable())
 
 #edits a delivery 
 @app.route('/delivery/<id>', methods=['PUT'])
@@ -111,7 +111,7 @@ def update_delivery(id):
         Delivery.update_delivery(id, 'delivery_location', request.json['delivery_location'])
     if 'order_time' in request.json.keys():
         Delivery.update_delivery(id, 'order_time', request.json['order_time'])
-    return jsonify(delivery = Delivery.get_delivery_by_id(id))
+    return jsonify(Delivery.get_delivery_by_id(id).__dict__)
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
