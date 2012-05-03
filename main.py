@@ -113,6 +113,11 @@ def update_delivery(id):
         Delivery.update_delivery(id, 'order_time', request.json['order_time'])
     return jsonify(delivery = Delivery.get_delivery_by_id(id))
 
+#gets a delivery 
+@app.route('/delivery/<id>', methods = ['GET'])
+def get_delivery(id):
+    return jsonify(delivery = Delivery.get_delivery_by_id(id))
+
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
 #creates a new food item for everything in here. 
@@ -127,6 +132,7 @@ def add_order():
     orderID = Order.create_order(deliveryid, userID)
     
     return jsonify(order = Order.get_order_by_id(orderID))
+
 
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
