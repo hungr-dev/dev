@@ -31,6 +31,7 @@ var DeliveryModel = Backbone.Model.extend({
     deliveryLocation: null,
     orders: new OrderCollection([])
   },
+  urlRoot: 'delivery',
 });
 var OrderModel = Backbone.Model.extend({
   defaults: {
@@ -65,20 +66,33 @@ var LocationModel = Backbone.Model.extend({
  * Views for the models defined above:
  */
 var DeliveryView = Backbone.View.extend({
+  model: null,
   initialize: function() {
-    this.wrapper = $('#delivery-wrapper');
+    this.setElement($('#delivery'));
+    this.render();
   },
   render: function() {
+    var html, viewData;
+
     // Compile the template using underscore
-    var viewData = {
-      restaurantName: this.model.get('restaurant').get('name')
+    if (this.model === null) {
+      html = _.template($('#delivery-initial-html').html());;
+    } else if (this.model.get('restaurant') === null) {
+      html = _.template($('#delivery-loading-html').html());
+    } else {
+      viewData = {
+        restaurantName: this.model.get('restaurant').get('name')
+      }
+      html = _.template($('#delivery-html').html(), viewData);
     }
-    var template = _.template($('#delivery-html').html(), viewData);
 
     // Load the compiled HTML into the wrapper
-    this.wrapper.html(template);
+    this.$el.html(html);
+
+    return this; // for method chaining
   },
-  createDelivery: function(restaurant_id) {
-    // TODO
+  createDelivery: function(restaurantID) {
+    this.model = new DeliveryModel();
+    this.model.save({restaurantID: restaurantID});
   }
 });

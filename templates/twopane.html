@@ -39,17 +39,21 @@
 	</script>
 
 	<script id="delivery-html" type="text/template">
-		<div id="delivery">
-			<div id="restaurant-info">
-				<h2 id="restaurant-name"><%= restaurantName %></h2>
-			</div>
-			<ul id="orders-wrapper">
-
-			</ul>
-			<form id="order-form">
-
-			</form>
+		<div id="restaurant-info">
+			<h2 id="restaurant-name"><%= restaurantName %></h2>
 		</div>
+		<ul id="orders-wrapper">
+
+		</ul>
+		<form id="order-form">
+
+		</form>
+	</script>
+	<script id="delivery-initial-html" type="text/template">
+		[Tips]
+	</script>
+	<script id="delivery-loading-html" type="text/template">
+		[Loading]
 	</script>
 
 	<script src="./static/js/deliveries.js" type="text/javascript"></script>
@@ -71,6 +75,7 @@
 	</div>
 
 	<div id="delivery-wrapper">
+		<div id="delivery"></div>
 	</div>
 
 </body>
