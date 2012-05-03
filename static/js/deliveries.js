@@ -43,7 +43,7 @@ var DeliveryModel = Backbone.RelationalModel.extend({
     collectionType: 'OrderCollection',
   }]
 });
-var OrderModel = Backbone.Model.extend({
+var OrderModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
     member: "",
@@ -63,7 +63,7 @@ var MemberModel = Backbone.Model.extend({
     name: "Anonymous"
   },
 });
-var FoodItemModel = Backbone.Model.extend({
+var FoodItemModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
     name: "",
@@ -91,6 +91,7 @@ var DeliveryView = Backbone.View.extend({
     var html, viewData;
 
     // Compile the template using underscore
+    console.log(this.model);
     if (this.model === null) {
       html = _.template($('#delivery-initial-html').html());;
     } else if (this.model.get('restaurant') === null) {
@@ -125,6 +126,18 @@ var DeliveryView = Backbone.View.extend({
 
     var that = this;
     this.model.save({restaurantID: restaurantID}, {
+      success: function () {
+        console.log(that.model);
+        that.render();
+      },
+    });
+    this.render();
+  },
+  joinDelivery: function(deliveryID) {
+    this.model = new DeliveryModel({id: deliveryID});
+
+    var that = this;
+    this.model.fetch({
       success: function () {
         console.log(that.model);
         that.render();
