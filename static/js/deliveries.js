@@ -89,7 +89,7 @@ var DeliveryView = Backbone.View.extend({
   },
   initialize: function() {
     this.setElement($('#delivery'));
-    this.render();
+    this.$el.hide();
   },
   render: function() {
     var html, viewData;
@@ -126,28 +126,35 @@ var DeliveryView = Backbone.View.extend({
     return this; // for method chaining
   },
   createDelivery: function (restaurantID) {
-    this.model = new DeliveryModel();
-
     var that = this;
-    this.model.save({restaurantID: restaurantID}, {
-      success: function () {
-        console.log(that.model);
-        that.render();
-      },
+    this.$el.fadeOut(250, function () {
+      that.model = new DeliveryModel();
+
+      that.model.save({restaurantID: restaurantID}, {
+        success: function () {
+          console.log(that.model);
+          that.render();
+        },
+      });
+
+      that.render();
+      that.$el.fadeIn();
     });
-    this.render();
   },
   joinDelivery: function (deliveryID) {
-    this.model = new DeliveryModel({id: deliveryID});
-
     var that = this;
-    this.model.fetch({
-      success: function () {
-        console.log(that.model);
-        that.render();
-      },
+    this.$el.fadeOut(250, function () {
+      that.model = new DeliveryModel({id: deliveryID});
+
+      that.model.fetch({
+        success: function () {
+          that.render();
+        },
+      });
+
+      that.render();
+      that.$el.fadeIn();
     });
-    this.render();
   },
   updateDeliveryTime: function () {
     this.model.save({order_time: this.$el.find('#delivery-time').val()});

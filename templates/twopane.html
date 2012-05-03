@@ -1,6 +1,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="./static/css/style.css" type="text/css">
+	<link href="//get.pictos.cc/fonts/718/5" rel="stylesheet" type="text/css">
 
 	<!-- Load libraries -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -8,66 +9,56 @@
 	<script src="./static/js/backbone.js" type="text/javascript"></script>
 	<script src="./static/js/backbone-relational.js" type="text/javascript"></script>
 
+	<script type="text/javascript" src="http://use.typekit.com/nlp4pgk.js"></script>
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
 	<!-- Load templates for Javascript views -->
 	<script id="search-html" type="text/template">
-		<div id="search-container">
-			<div id="search-box-container">
-				<input id="search-box" type="text" placeholder="Enter restaurants, cuisines, foods, etc."/>
-				<div class="search-logo"></div>
-			</div>
-		</div>	
+		<input id="search-box" type="text" placeholder="Enter restaurants, cuisines, foods, etc."/>	
 	</script>
 
 	<script id="result-html" type="text/template">
-			<div class="result-content">
-				<div class="result-photo"></div>
-				<div class="result-text">
-					<div class="result-name"><%= result_name %></div>
-					<div class="result-address"><em><%= result_address_city %></em></div>
-					<hr class="result-divider"/>
-					<div class="result-cuisines"><%= result_cuisines %></div>
-					<div class="result-food-items"><%= result_food_items %></div>
-				</div>
-				<div class="result-buttons">
-					<% _.each(result_deliveries, function(delivery){ %>
-						<a class="join-delivery-button" id=<%= delivery[0] %> >
-							<%= delivery[1] %>
-						</a>
-					<% }); %>
-					<a class="create-button-wrapper button">
-						<div class="create-button"><span>CREATE ORDER</span></div>
-					</a>
-				</div>
-				<div class="clear"></div>
-			</div>
+		<div class="result-buttons">
+			<% _.each(result_deliveries, function(delivery){ %>
+				<a class="join-delivery-button button" id=<%= delivery[0] %> >
+					<%= delivery[1] %>
+				</a>
+			<% }); %>
+			<a class="create-button button">+</a>
+		</div>
+		<div class="result-text">
+			<div class="result-name"><%= result_name %></div>
+			<div class="result-address"><%= result_address_city %></div>
+			<div class="result-cuisines"><%= result_cuisines %><% if (result_food_items !== '') { %>: <% } %><%= result_food_items %></div>
+		</div>
 	</script>
 
 	<script id="delivery-html" type="text/template">
 		<div id="restaurant-info">
+			<span id="restaurant-phone"><%= restaurantPhone.substr(0, 3) %>-<%= restaurantPhone.substr(3, 3) %>-<%= restaurantPhone.substr(6, 4) %></span>
 			<h2 id="restaurant-name"><%= restaurantName %></h2>
-			<span id="restaurant-phone"><%= restaurantPhone %></span>
 			<address>
 				<%= restaurantAddress.street %><br />
 				<%= restaurantAddress.city %>, <%= restaurantAddress.state %>
 			</address>
 		</div>
 		<form id="delivery-info">
-			<input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
-			<input type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+			<span class="icon">t</span><input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
+			<span class="icon">l</span><input data-icon="l" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
 		</form>
 		<form id="order-form">
 			<ul id="your-food-items">
 				<% for (var i = 0; i < foodItems.length; i++) { %>
 					<li class="food-item">
-						<input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItems[i].quantity %>" placeholder="Qty." />
-						<input type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItems[i].name %>" placeholder="Dish name" />
-						<input type="text" name="food-item-<%= i %>-price" id="food-item-<%= i %>-price" value="<%= foodItems[i].price %>" placeholder="Price" />
+						<span class="icon">q</span><input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItems[i].quantity %>" placeholder="Qty." />
+						<span class="icon">f</span><input data-icon="f" type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItems[i].name %>" placeholder="Dish name" />
+						<span class="icon">p</span><input data-icon="p" type="text" name="food-item-<%= i %>-price" id="food-item-<%= i %>-price" value="<%= foodItems[i].price %>" placeholder="Price" />
 					</li>
 				<% } %>
 				<li class="food-item new-food-item">
-					<input type="text" name="food-item-new-quantity" id="food-item-new-quantity" placeholder="Qty." />
-					<input type="text" name="food-item-new-name" id="food-item-new-name" placeholder="Dish name" />
-					<input type="text" name="food-item-new-price" id="food-item-new-price" placeholder="Price" />
+					<span class="icon">q</span><input type="text" name="food-item-new-quantity" id="food-item-new-quantity" placeholder="Qty." />
+					<span class="icon">f</span><input type="text" name="food-item-new-name" id="food-item-new-name" placeholder="Dish name" />
+					<span class="icon">p</span><input type="text" name="food-item-new-price" id="food-item-new-price" placeholder="Price" />
 				</li>
 			</ul>
 		</form>
@@ -87,19 +78,15 @@
 </head>
 
 <body>
-	<div id="header">
-		<div id="small-logo"></div>
+	<div id="search-pane">
+		<div id="header">
+			<h1>hungr</h1>
+		</div>
+		<div id="search-wrapper"></div>
+		<div id="results-wrapper"></div>
 	</div>
-
-	<div id="search-wrapper">
-	</div>
-
-	<div id="results-wrapper">
-	</div>
-
-	<div id="delivery-wrapper">
+	<div id="delivery-pane">
 		<div id="delivery"></div>
 	</div>
-
 </body>
 </html>

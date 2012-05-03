@@ -75,7 +75,7 @@ var ResultModel = Backbone.Model.extend({
 var ResultView = Backbone.View.extend({
 	className: 'result',
 	events: {
-		'click .create-button-wrapper': 'createDelivery',
+		'click .create-button': 'createDelivery',
 		'click .join-delivery-button': 'joinDelivery'
 	},
 	initialize: function() {
