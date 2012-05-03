@@ -12,7 +12,10 @@ app.config.from_object(__name__)
 
 @app.route('/',methods=['GET'])
 def hungr():
-    return render_template('twopane.html')
+    if 'id' in session.keys():
+        return render_template('twopane.html')
+    else:
+        return render_template('login.html')
 
 @app.route('/login',methods=['POST'])
 def login():
@@ -116,7 +119,7 @@ def update_delivery(id):
 #gets a delivery 
 @app.route('/delivery/<id>', methods = ['GET'])
 def get_delivery(id):
-    return jsonify(Delivery.get_delivery_by_id(id).serializable())
+    return jsonify(delivery = Delivery.get_delivery_by_id(id).serializable())
 
 #adds a new order to a delivery
 #for now, no editing. just creates a new order, adds it to the delivery
