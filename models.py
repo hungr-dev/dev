@@ -3,6 +3,7 @@ from flask import g, Flask
 import os
 import sqlite3
 from contextlib import closing
+from collections import Counter
 
 ###############################################################################
 
@@ -197,3 +198,46 @@ class Restaurant:
 
     def get_food_items(self):
         return FoodItem.get_food_items_by_restaurant_id(self.id)
+
+class Search:
+    """
+    A class for restaurant searching and ranking.
+
+    Attributes:
+        query: A list of search terms
+    """
+    def __init__(self, query):
+        self.query = query
+
+    def search_db(self):
+        """
+        Searches for search term matches on restaurant, food, and cuisine names.
+        Ranks the restaurants based on number of matches associated.
+
+        Returns:
+            A list of Restaurant objects sorted descending by "relevance"
+        """
+        restaurant_ids = []
+        for searchTerm in self.query:
+            q = query_db("SELECT cuisine_restaurants.restaurant_id AS id\
+                    FROM\
+                    cuisine\
+                    LEFT JOIN cuisine_restaurants\
+                    ON cuisine.id = cuisine_restaurants.cuisine_id\
+                    WHERE cuisine.name LIKE ?\
+                    UNION ALL\
+                    SELECT restaurants.id\
+                    FROM\
+                    restaurants\
+                    LEFT JOIN food_items\
+                    ON restaurants.id = food_items.restaurant_id\
+                    WHERE food_items.name LIKE ?\
+                    UNION ALL\
+                    SELECT restaurants.id\
+                    FROM restaurants\
+                    WHERE restaurants.name LIKE ?",
+                    [searchTerm], one=False)
+            restaurant_ids.append([row['id'] for row in q])
+
+        restaurant_ids_ranked = list(Counter(restaurants)).sort(reverse=True)
+        restaurants_ranked = [Restaurant.get_restaurant_by_id(id) for id in restaurant_ids_ranked]

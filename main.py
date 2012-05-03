@@ -22,7 +22,6 @@ def login():
 	session['id']=login['id'] 
 	return "login successful"
 
-
 @app.route('/logout/',methods=['POST'])
 def logout():
     session.pop('id',None)
@@ -144,46 +143,6 @@ def search():
         restaurantresults.append(Restaurant(restaurant))
     print restaurantresults    
     return jsonify(results=restaurantresults)
-
-class RestaurantSearch:
-    """
-    A class for restaurant searching and ranking.
-
-    Attributes:
-        query: A list of search terms
-    """
-    def __init__(self, query):
-        self.query = query
-
-    def searchDB(self):
-        """
-        Searches for search term matches on restaurant names, food names.
-
-        """
-        for searchTerm in self.query:
-            q = query_db("SELECT restaurant_hits.id, count(*)\
-                AS hits\
-                FROM\
-                    (SELECT restaurants.id \
-                    FROM\
-                    cuisine\
-                    LEFT JOIN restaurants\
-                    ON restaurants.cuisine_id = cuisine.id\
-                    WHERE cuisine.name LIKE ?\
-                    UNION ALL\
-                    SELECT restaurants.id\
-                    FROM\
-                    restaurants\
-                    LEFT JOIN food_items\
-                    ON restaurants.id = food_items.restaurant_id\
-                    WHERE food_items.name LIKE ?\
-                    UNION ALL\
-                    SELECT restaurants.id\
-                    FROM restaurants\
-                    WHERE restaurants.name LIKE ?)\
-                AS restaurant_hits\
-                GROUP BY id",
-                [searchTerm], one=False)
                  
 #no creator_id yet.  need to do authentication
 #order_time also has to be given as a valid datetime object string format
