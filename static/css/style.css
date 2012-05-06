@@ -19,17 +19,18 @@ input {
 }
 #search-pane {
 	background: url('../img/stripes.png') repeat top left;
+	border-right: 1px solid #000;
 	height: 100%;
 	width: 50%;
 	left: 0;
 	top: 0;
 	z-index: 10;
-	-webkit-box-shadow: 5px 0 30px rgba(0, 0, 0, 0.6);
+	-webkit-box-shadow: 5px 0 7px rgba(0, 0, 0, 0.1);
 	position: absolute;
 	overflow-y: auto;
 }
 	#header {
-		background: #fff;
+		background: #eee;
 		padding: 20px 15px 15px;
 		border-bottom: 1px solid #053d60;
 	}
@@ -82,9 +83,9 @@ input {
 			border-bottom: 1px solid #ddd;
 			padding: 15px;
 			background: #fff;
-			-webkit-box-shadow: inset 0 -25px 25px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
-			-moz-box-shadow: inset 0 -25px 25px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
-			box-shadow: inset 0 -25px 25px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
+			-webkit-box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
+			box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
 		}
 			#results-wrapper div.result .result-name {
 				font-weight: bold;
@@ -118,7 +119,7 @@ input {
 	top: 0;
 	position: absolute;
 	overflow-y: auto;
-	background: url('../img/delivery-pane.png') repeat top left;
+	background: #222 repeat top left;
 }
 	#delivery-pane #delivery {
 		margin: 40px;
