@@ -149,6 +149,9 @@ def add_order():
 def get_order(id):
     return jsonify(order = Order.get_order_by_id(id).serializable())
 
+#creates a new (empty) food item in food_times table (NOT NECESSARY with menu data now)
+#associates the food item with an existing order with given order_id
+#TODO should now take food item id, and just associate given food item with order
 @app.route('/fooditem', methods = ['POST'])
 def add_fooditem():
     orderid = request.json['order_id']
@@ -160,6 +163,7 @@ def add_fooditem():
 #need to update fooditem name, price, quantity
 @app.route('/fooditem/<id>',methods=['PUT'])
 def update_fooditem(id):
+    #assigns values to empty food_item columns for given id
     if 'name' in request.json.keys():
         FoodItem.update_fooditem(id, 'name',request.json['name'])
     if 'price' in request.json.keys():
