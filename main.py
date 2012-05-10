@@ -10,6 +10,15 @@ DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+@app.route('/quans_scraper', methods=['POST'])
+def quans_scrape():
+    food= request.form['food']
+    price = request.form['price']
+    print "SCRAPING", food, price
+
+    update_db('INSERT INTO food_items (name, price, restaurant_id) VALUES (?,?,?)',(food,price,5))
+    return jsonify(foo='bar')
+
 @app.route('/',methods=['GET'])
 def hungr():
     if 'id' in session.keys():
@@ -285,7 +294,7 @@ def init_db():
         pass
 
     with closing(connect_db()) as db:
-        with app.open_resource('schema.sql') as f:
+        with app.open_resource('scraped_schema.sql') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
