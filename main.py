@@ -74,7 +74,7 @@ def search():
 	rdict['deliveries'] = [(d.id, d.order_time) for d in restaurant.get_deliveries()]
         result.append(rdict)
     print result
-    return jsonify(results=result)  
+    return jsonify(result)  
 
 #adds a new delivery
 @app.route('/delivery', methods = ['POST'])
@@ -100,10 +100,7 @@ def update_delivery(id):
 def get_delivery(id):
     return jsonify(Delivery.get_delivery_by_id(id).serializable())
 
-#adds a new order to a delivery
-#for now, no editing. just creates a new order, adds it to the delivery
-#creates a new food item for everything in here. 
-#then associates food items with orders 
+#adds a new blank order to a delivery
 @app.route('/order', methods = ['POST'])
 def add_order():
     
@@ -113,11 +110,18 @@ def add_order():
     
     orderID = Order.create_order(deliveryid, userID)
     
-    return jsonify(order = Order.get_order_by_id(orderID).serializable())
+    return jsonify(Order.get_order_by_id(orderID).serializable())
+
+#adds a list of (fooditem, quantity) tuple things to an order
+@app.route('/order/<id>', methods=['PUT'])
+def update_order(id):
+    # request.json['fooditemsAndQuantities'] should be a list of dictionaries {id: <fooditemid>, quantity:<quantity>}
+    Order.add_fooditems_and_quantity_to_order(id,request.json['fooditemsAndQuantities'])
+    return jsonify(Order.get_order_by_id(id).serializable())
 
 @app.route('/order/<id>', methods=['GET'])
 def get_order(id):
-    return jsonify(order = Order.get_order_by_id(id).serializable())
+    return jsonify(Order.get_order_by_id(id).serializable())
 
 #creates a new (empty) food item in food_times table (NOT NECESSARY with menu data now)
 #associates the food item with an existing order with given order_id

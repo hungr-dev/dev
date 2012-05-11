@@ -163,8 +163,8 @@ class Order:
     def serializable(self):
         d = self.__dict__
         d['member'] = User.get_user_by_userid(self.member_id)
-        d['fooditems'] = [fooditem.serializable() for fooditem in \
-        FoodItem.get_food_items_by_order_id(self.id)]
+        d['fooditems'] = [fooditemAndQuantity.serializable() for fooditemAndQuantity in \
+        FoodItem.get_food_items_and_quantity_by_order_id(self.id)]
         return d
 
     @staticmethod
@@ -181,6 +181,25 @@ class Order:
                          [id], one=True)
         return Order(order['id'], order['delivery_id'], order['member_id'])
 
+    @staticmethod 
+    def add_fooditems_and_quantity_to_order(orderid, fooditemsAndQuantities):
+	for fq in fooditemsAndQuantities:
+            FoodItem.associate_fooditem_with_order(fq['id'], orderid, fq['quantity'])
+
+        return True
+class FoodItemAndQuantity:
+    """
+    A class representing a food item.
+
+    """
+    def __init__(self,fooditem, quantity):
+        self.fooditem = fooditem.serializable();
+        self.quantity = quantity;
+
+    def serializable(self):
+        d = self.__dict__
+        return d
+
 class FoodItem:
     """
     A class representing a food item.
@@ -194,7 +213,6 @@ class FoodItem:
 
     def serializable(self):
         d = self.__dict__
-##        d['quantity'] = FoodItem.get_quantity(self.id)
         return d
     
     @staticmethod
@@ -221,28 +239,24 @@ class FoodItem:
         return out
 
     @staticmethod
-    def get_food_items_by_order_id(id):
-        food_items = query_db("SELECT food_item_id FROM\
+    def get_food_items_and_quantity_by_order_id(id):
+        food_items_and_quantities = query_db("SELECT food_item_id, quantity FROM\
             order_food_items WHERE order_id = ?", [id],one=False)
         out = []
-        for f in food_items: 
-            food_id=f['food_item_id']
-            out.append(FoodItem.get_food_item_by_id(food_id))
+        for fq in food_items_and_quantities: 
+            food_id=fq['food_item_id']
+            out.append(FoodItemAndQuantity(FoodItem.get_food_item_by_id(food_id),fq['quantity']))
         return out
     
-##    @staticmethod
-##    def get_quantity(id):
-##        return query_db("SELECT quantity from order_food_items where\
-##                       food_item_id =?", [id], one=True)
-    
-    @staticmethod
-    def create_fooditem(name, price, restaurantid):
-        query = "INSERT into food_items (name, price, restaurant_id) VALUES\
-	        (?,?,?)"
-        update_db(query, [name, price, restaurantid])
-        query = "select last_insert_rowid() as fooditemid from food_items"
-        result = query_db(query, [], one=True)
-        return result['fooditemid']
+  
+#    @staticmethod
+#    def create_fooditem(name, price, restaurantid):
+#        query = "INSERT into food_items (name, price, restaurant_id) VALUES\
+#	        (?,?,?)"
+#        update_db(query, [name, price, restaurantid])
+#        query = "select last_insert_rowid() as fooditemid from food_items"
+#        result = query_db(query, [], one=True)
+#        return result['fooditemid']
 
     @staticmethod
     def associate_fooditem_with_order(fooditemid, orderid, quantity):
@@ -250,11 +264,11 @@ class FoodItem:
 		VALUES (?,?)"
         update_db(query, [fooditemid, orderid])
         return True        
-    @staticmethod
-    def update_fooditem(fooditemid, param, value):
-        query = "UPDATE food_items SET "+param+" = ? WHERE id = ?"
-        update_db(query, [value, fooditemid])
-        return True
+#    @staticmethod
+#    def update_fooditem(fooditemid, param, value):
+#        query = "UPDATE food_items SET "+param+" = ? WHERE id = ?"
+#        update_db(query, [value, fooditemid])
+#        return True
 
 class User:
     """
