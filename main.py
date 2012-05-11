@@ -80,7 +80,7 @@ def search():
 @app.route('/delivery', methods = ['POST'])
 def process_delivery():
     restaurantID = request.json['restaurantID']
-    #userID = session['userID']
+
     userID = session['id']
     createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, userID)
     return jsonify(Delivery.get_delivery_by_id(createdDeliveryID).serializable())
@@ -109,7 +109,7 @@ def add_order():
     
     deliveryid = request.json['delivery_id']
     #userID = session['userID']
-    userID = 1 #hardcoded for now
+    userID = session['id']
     
     orderID = Order.create_order(deliveryid, userID)
     
