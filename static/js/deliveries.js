@@ -110,6 +110,7 @@ var DeliveryView = Backbone.View.extend({
       }
 
       viewData = {
+        id: this.model.id,
         orderTime: (this.model.get('order_time') === null ? '' : this.model.get('order_time')),
         deliveryLocation: (this.model.get('delivery_location') === null ? '' : this.model.get('delivery_location')),
         restaurantName: this.model.get('restaurant').get('name'),

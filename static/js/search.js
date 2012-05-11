@@ -91,7 +91,7 @@ var ResultView = Backbone.View.extend({
 		var restaurant = this.model;
 		var viewData = {
 			result_name : restaurant.get('name'), 
-			result_food_items: restaurant.get('food_items').join(', '),
+			result_food_items: truncateString(restaurant.get('food_items').join(', ')),
 			result_cuisines : restaurant.get('cuisine').join(', '),
 			result_address_city: restaurant.get('address_city'),
 			result_deliveries: restaurant.get('deliveries')
