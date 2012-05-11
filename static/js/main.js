@@ -27,3 +27,8 @@ var AppRouter = Backbone.Router.extend({
 		return;
 	}
 });
+
+var truncateString = function(str){
+	var length = 100;
+	return  str.substring(0, 100) + '...';
+};
