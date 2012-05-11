@@ -106,7 +106,7 @@ class Delivery:
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
         d['orders'] = [order.serializable() for order in self.orders]
-        d['member'] = User.get_user_by_userid(self.member_id)
+        d['member'] = User.get_user_by_userid(self.creator_member_id).serializable()
         return d
 
     @staticmethod
@@ -135,16 +135,13 @@ class Delivery:
 
     @staticmethod
     def create_delivery(deliverylocation, ordertime, restaurantid, userid):
-        query = "INSERT into deliveries (delivery_location, order_time,\
-		restaurant_id, creator_member_id) VALUES (?,?,?,?)"
-        update_db(query, [deliverylocation, ordertime, restaurantid, userid])
-        
-        query = "SELECT last_insert_rowid() as deliveryid from deliveries"
-        
-        result = query_db(query, [], one=True)
-        
-	return result['deliveryid']
-    
+		query = "INSERT into deliveries (delivery_location, order_time,\
+				restaurant_id, creator_member_id) VALUES (?,?,?,?)"
+		update_db(query, [deliverylocation, ordertime, restaurantid, userid])
+		query = "SELECT last_insert_rowid() as deliveryid from deliveries"
+		result = query_db(query, [], one=True)
+		return result['deliveryid']
+
     @staticmethod 
     def update_delivery(deliveryID, param, value):
 
@@ -297,13 +294,13 @@ class User:
         return d
     
     @staticmethod
-    def get_user_by_userid(self, id):
-        user = query_db("SELECT * FROM\
+    def get_user_by_userid(id):
+        u = query_db("SELECT * FROM\
             members WHERE id = ?",
             [id], one=True)
 
-        return User(r['id'], 
-            r['username'])
+        return User(u['id'], 
+            u['username'])
 
 
 class Restaurant:
@@ -361,16 +358,14 @@ class Restaurant:
         return FoodItem.get_top_food_items_by_restaurant_id(self.id)
 
 class FoodSearch:
-     def __init__(self,restaurantid, query):
-        self.rid = restaurantid
-        self.query = query
-
-    def search_db(self):
-        
-        q = query_db("SELECT id from food_items WHERE restaurant_id = ? and \
-                     name LIKE ?", [self.rid,self.query], one=False)
-        fooditems = [row['id'] for row in q ]
-        return fooditems
+	def __init__(self,restaurantid, query):
+		self.rid = restaurantid
+		self.query = query
+	def search_db(self):
+		q = query_db("SELECT id from food_items WHERE restaurant_id = ? and \
+				name LIKE ?", [self.rid,self.query], one=False)
+		fooditems = [row['id'] for row in q ]
+		return fooditems
         
 class Search:
     """
