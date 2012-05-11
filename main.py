@@ -149,9 +149,16 @@ def get_order(id):
 
 @app.route('/fooditem/<id>', methods = ['GET'])
 def get_fooditem(id):
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
+    return jsonify(FoodItem.get_food_item_by_id(id).serializable())
 
-
+@app.route('/restaurant/<rid>/food/, methods = ['GET'])
+def food_search_within_restaurant(rid):
+    searchterm = request.args['query']
+    searchterm = "%"+searchterm.replace(" ", "%")+"%"
+    fs= FoodSearch(rid, searchterm)
+    results = fs.search_db()
+    return jsonify([FoodItem.get_food_item_by_id(x).serializable() for x in results])
+    
 
 app.secret_key="&v\xff\x939\x1e\x93\xc2\x8ar\xee\xee\xbehhIS\xe00\x15'\xaee!"
 

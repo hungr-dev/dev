@@ -359,6 +359,19 @@ class Restaurant:
 
     def get_top_food_items(self):
         return FoodItem.get_top_food_items_by_restaurant_id(self.id)
+
+class FoodSearch:
+     def __init__(self,restaurantid, query):
+        self.rid = restaurantid
+        self.query = query
+
+    def search_db(self):
+        
+        q = query_db("SELECT id from food_items WHERE restaurant_id = ? and \
+                     name LIKE ?", [self.rid,self.query], one=False)
+        fooditems = [row['id'] for row in q ]
+        return fooditems
+        
 class Search:
     """
     A class for restaurant searching and ranking.
