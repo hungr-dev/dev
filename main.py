@@ -71,6 +71,7 @@ def search():
         rdict['address_city'] = restaurant.get_address().city
         rdict['cuisine'] = [c.name for c in restaurant.get_cuisines()]
         rdict['food_items'] = [fi.name for fi in restaurant.get_food_items()]
+        rdict['top_food_items'] = [tfi.name for tfi in restaurant.get_top_food_items()]
 	rdict['deliveries'] = [(d.id, d.order_time) for d in restaurant.get_deliveries()]
         result.append(rdict)
     print result

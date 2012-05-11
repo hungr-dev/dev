@@ -239,6 +239,18 @@ class FoodItem:
         return out
 
     @staticmethod
+    def get_top_food_items_by_restaurant_id(id):
+        food_items = query_db("SELECT food_item_id FROM\
+            top_food_items WHERE restaurant_id = ?",
+            [id], one=False)
+
+        out = []
+        for f in food_items:
+            food_id = f['food_item_id']
+            out.append(FoodItem.get_food_item_by_id(food_id))
+        return out
+
+    @staticmethod
     def get_food_items_and_quantity_by_order_id(id):
         food_items_and_quantities = query_db("SELECT food_item_id, quantity FROM\
             order_food_items WHERE order_id = ?", [id],one=False)
@@ -345,6 +357,8 @@ class Restaurant:
     def get_food_items(self):
         return FoodItem.get_food_items_by_restaurant_id(self.id)
 
+    def get_top_food_items(self):
+        return FoodItem.get_top_food_items_by_restaurant_id(self.id)
 class Search:
     """
     A class for restaurant searching and ranking.
