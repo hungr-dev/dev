@@ -10,6 +10,7 @@ DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+# we used this to scrape using the Chrome userscript in the git repo
 @app.route('/quans_scraper', methods=['POST'])
 def quans_scrape():
     food= request.form['food']
@@ -51,38 +52,7 @@ def create_user():
         return "username created"
     #insert into table
 
-@app.route('/deliveryold/<id>', methods=['GET','DELETE'])
-def get_delivery(id):
-    if request.method == 'GET':
-        delivery = query_db('SELECT * from deliveries WHERE id=?',[id], one=True)
-        restID = delivery['restaurant_id']
-        restaurant = query_db('SELECT * from restaurants  WHERE id=?',[restID], one=True)
-        order = []
-        for ord in query_db('SELECT * from orders WHERE delivery_id=?',[delivery['id']]):
-            temp_order = {}
-            foods = []
-            for food in query_db('SELECT food_item_id from order_food_items WHERE order_id=?',[ord['id']]):
-                f = {}
-                f['id'] = food['food_item_id']
-                foodItem = query_db('SELECT * from food_items WHERE id=?',[food['food_item_id']],one=True)
-                f['name'] = foodItem['name']
-                f['price'] = foodItem['price']
-                f['quantity'] = 1
-                foods.append(f)
-            temp_order['id'] = ord['id']
-            temp_order['food_items'] = foods
-            temp_order['member'] = Member(ord['member_id'])
-            order.append(temp_order)
 
-        return jsonify(id=delivery['id'], restaurant=Restaurant(restaurant), order_time=delivery['order_time'],
-                       delivery_location=delivery['delivery_location'], creator=Member(delivery['creator_member_id']),
-                       orders=order)
-    elif request.method == 'DELETE':
-        update_db('DELETE from deliveries WHERE id=?',[id])
-        update_db('DELETE from orders WHERE delivery_id=?',[id])
-        return jsonify({'message':'deleted delivery'})
-    else:
-        return jsonify({'message':'NONE'})
 
 @app.route('/search/', methods = ['GET'])
 def search():
@@ -111,7 +81,7 @@ def search():
 def process_delivery():
     restaurantID = request.json['restaurantID']
     #userID = session['userID']
-    userID = 1 #hardcoded for now
+    userID = session['id']
     createdDeliveryID = Delivery.create_delivery(None, None, restaurantID, userID)
     return jsonify(Delivery.get_delivery_by_id(createdDeliveryID).serializable())
 
@@ -151,114 +121,30 @@ def get_order(id):
 
 #creates a new (empty) food item in food_times table (NOT NECESSARY with menu data now)
 #associates the food item with an existing order with given order_id
-#TODO should now take food item id, and just associate given food item with order
-@app.route('/fooditem', methods = ['POST'])
-def add_fooditem():
-    orderid = request.json['order_id']
-    restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
-    fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
-    FoodItem.associate_fooditem_with_order(fooditem_id, orderid, 0)
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(fooditem_id).serializable())
+## todo:  should now take food item id, and just associate given food item with order
+##@app.route('/fooditem', methods = ['POST'])
+##def add_fooditem():
+##    orderid = request.json['order_id']
+##    restaurant_id = Delivery.get_delivery_by_id(Order.get_order_by_id(orderid).delivery_id).restaurant_id
+##    fooditem_id = FoodItem.create_fooditem(None, None, restaurant_id)
+##    FoodItem.associate_fooditem_with_order(fooditem_id, orderid, 0)
+##    return jsonify(fooditem = FoodItem.get_food_item_by_id(fooditem_id).serializable())
 
 #need to update fooditem name, price, quantity
-@app.route('/fooditem/<id>',methods=['PUT'])
-def update_fooditem(id):
-    #assigns values to empty food_item columns for given id
-    if 'name' in request.json.keys():
-        FoodItem.update_fooditem(id, 'name',request.json['name'])
-    if 'price' in request.json.keys():
-        FoodItem.update_fooditem(id, 'price', request.json['price'])
-    if 'quantity' in request.json.keys():
-        FoodItem.update_fooditem(id, 'quantity', request.json['quantity'])
-    return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
+##@app.route('/fooditem/<id>',methods=['PUT'])
+##def update_fooditem(id):
+##    #assigns values to empty food_item columns for given id
+##    if 'name' in request.json.keys():
+##        FoodItem.update_fooditem(id, 'name',request.json['name'])
+##    if 'price' in request.json.keys():
+##        FoodItem.update_fooditem(id, 'price', request.json['price'])
+##    if 'quantity' in request.json.keys():
+##        FoodItem.update_fooditem(id, 'quantity', request.json['quantity'])
+##    return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
 
 @app.route('/fooditem/<id>', methods = ['GET'])
 def get_fooditem(id):
     return jsonify(fooditem = FoodItem.get_food_item_by_id(id).serializable())
-
-#no creator_id yet.  need to do authentication
-#order_time also has to be given as a valid datetime object string format
-@app.route('/deliveryold/',methods=['POST'])
-def delivery():
-    if 'restaurant_id' in request.form.keys():
-        restaurantID = request.form['restaurant_id']
-    else:
-        return jsonify({'message':'No restaurant_id given'})
-    if 'order_time' in request.form.keys():
-        orderTime = request.form['order_time']
-    else:
-        return jsonify({'message':'No order_time given'})
-    if 'delivery_location' in request.form.keys():
-        deliveryLocation = request.form['delivery_location']
-    else:
-        return jsonify({'message':'No delivery_location given'})
-    if not 'id' in session.keys():
-        return jsonify({'message':'Not logged in'})
-    
-    creatorID = session['id']
-
-    query = 'INSERT into deliveries(delivery_location, order_time, restaurant_id, creator_member_id) VALUES ("%s", "%s","%s", "%s")' % (deliveryLocation, orderTime, restaurantID, creatorID)
-    update_db(query)
-
-    return jsonify({'message':'post delivery success'})
-
-@app.route('/food_itemold/', methods=['POST'])
-def food_item():
-    if 'delivery_id' not in request.form.keys():
-        return jsonify({'message':'No delivery id given'})
-    if 'quantity' not in request.form.keys():
-        return jsonify({'message':'No quantity given'})
-    if 'name' not in request.form.keys():
-        return jsonify({'message':'No name given'})
-    if 'price' not in request.form.keys():
-        return jsonify({'message':'No price given'})
-    if not 'id' in session.keys():
-        return jsonify({'message':'Not logged in'})
-
-    memberID = session['id']
-
-    delivery_id = request.form['delivery_id']
-    quantity = int(request.form['quantity'])
-    name = request.form['name']
-    price = request.form['price']
-
-    restaurant_id = query_db('SELECT restaurant_id from deliveries WHERE id=?',[delivery_id],one=True)['restaurant_id']
-
-    query = 'INSERT into food_items(name, price, restaurant_id) VALUES ("%s","%s","%s")' % (name, price, restaurant_id)
-    update_db(query)
-
-    foodID = query_db('SELECT id from food_items WHERE name=? AND price=?',[name, price],one=True)['id']
-
-    for order in query_db('SELECT * from orders WHERE delivery_id=?',[delivery_id]):
-        #THIS NEEDS TO BE REPLACED WITH CURRENT USER ID, after AUTHENTICATION IMPLEMENTED
-        if order['member_id']==memberID:
-            for i in range(quantity):
-                update_db('INSERT into order_food_items(order_id, food_item_id) VALUES ("%s","%s")' % (order['id'], foodID))
-            f = {}
-            f['id'] = foodID
-            foodItem = query_db('SELECT * from food_items WHERE id=?',[foodID],one=True)
-            f['name'] = foodItem['name']
-            f['price'] = foodItem['price']
-            f['quantity'] = quantity
-            return jsonify(f)
-
-#            return jsonify({'message':'post food item success append'})
-
-    #if you get here, then there is no current order by this user for the specified delivery to add onto.  Creating a new order for user
-    update_db('INSERT into orders(delivery_id,member_id) VALUES ("%s","%s")' % (delivery_id,memberID))
-    orderID = query_db('SELECT id FROM orders WHERE delivery_id=? AND member_id=?',[delivery_id,memberID],one=True)['id']
-    for i in range(quantity):
-        update_db('INSERT into order_food_items(order_id, food_item_id) VALUES ("%s","%s")' % (orderID, foodID))
-    
-    f = {}
-    f['id'] = foodID
-    foodItem = query_db('SELECT * from food_items WHERE id=?',[foodID],one=True)
-    f['name'] = foodItem['name']
-    f['price'] = foodItem['price']
-    f['quantity'] = quantity
-    return jsonify(f)
-#    return jsonify({'message':'post food item success create'})
-
 
 
 

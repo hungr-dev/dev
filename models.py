@@ -106,7 +106,7 @@ class Delivery:
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
         d['orders'] = [order.serializable() for order in self.orders]
-        d['membername'] = "Stephen"
+        d['member'] = User.get_user_by_userid(self.member_id)
         return d
 
     @staticmethod
@@ -162,7 +162,7 @@ class Order:
 
     def serializable(self):
         d = self.__dict__
-        d['membername'] = "Stephen"
+        d['member'] = User.get_user_by_userid(self.member_id)
         d['fooditems'] = [fooditem.serializable() for fooditem in \
         FoodItem.get_food_items_by_order_id(self.id)]
         return d
@@ -194,7 +194,7 @@ class FoodItem:
 
     def serializable(self):
         d = self.__dict__
-        d['quantity'] = FoodItem.get_quantity(self.id)
+##        d['quantity'] = FoodItem.get_quantity(self.id)
         return d
     
     @staticmethod
@@ -230,10 +230,10 @@ class FoodItem:
             out.append(FoodItem.get_food_item_by_id(food_id))
         return out
     
-    @staticmethod
-    def get_quantity(id):
-        return query_db("SELECT quantity from order_food_items where\
-                       food_item_id =?", [id], one=True)
+##    @staticmethod
+##    def get_quantity(id):
+##        return query_db("SELECT quantity from order_food_items where\
+##                       food_item_id =?", [id], one=True)
     
     @staticmethod
     def create_fooditem(name, price, restaurantid):
@@ -255,6 +255,30 @@ class FoodItem:
         query = "UPDATE food_items SET "+param+" = ? WHERE id = ?"
         update_db(query, [value, fooditemid])
         return True
+
+class User:
+    """
+    A class representing a user
+
+    """
+    
+    def __init__(self, id, name):
+        self.id = id
+	self.name = name 
+
+    def serializable(self):
+        d = self.__dict__
+        return d
+    
+    @staticmethod
+    def get_user_by_userid(self, id):
+        user = query_db("SELECT * FROM\
+            members WHERE id = ?",
+            [id], one=True)
+
+        return User(r['id'], 
+            r['username'])
+
 
 class Restaurant:
     """
