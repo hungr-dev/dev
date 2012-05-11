@@ -24,7 +24,9 @@ var SearchView = Backbone.View.extend({
 	},
 	searchEnter: function(e){
 		if (e.which === 13){
-			this.search($('#search-box').val());
+			var q = $('#search-box').val();
+			this.search(q);
+			hungr.appRouter.navigate('search/' + q);
 		}
 	},
 	search: function(searchTerm){
@@ -53,6 +55,9 @@ var SearchView = Backbone.View.extend({
 			var result_collection = new ResultCollection(results_list);
 			}
 		});
+	},
+	updateSearchDisplay: function(searchTerm){
+		this.$el.find($('#search-box')).val(searchTerm);
 	}
 });
 
@@ -98,11 +103,14 @@ var ResultView = Backbone.View.extend({
 		this.wrapper.append(this.el);
 	},
 	createDelivery: function () {
-		this.model.get('deliveryView').createDelivery(this.model.get('id'));
+		var deliveryId = this.model.get('id');
+		this.model.get('deliveryView').createDelivery(deliveryId);
+		hungr.appRouter.navigate('delivery/' + deliveryId);
 	},
 	joinDelivery: function(ev) {
 		console.log($(ev.target).attr('id'))
 		var deliveryId = $(ev.target).attr('id');
-		this.model.get('deliveryView').joinDelivery(deliveryId); 
+		this.model.get('deliveryView').joinDelivery(deliveryId);
+		hungr.appRouter.navigate('delivery/' + deliveryId); 
 	}
 });
