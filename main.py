@@ -3,7 +3,7 @@ import os
 import sqlite3
 from contextlib import closing
 import json
-from models import Address, Delivery, FoodItem, Restaurant, Search, Order
+from models import Address, Delivery, FoodItem, Restaurant, Search, Order, User
 import urlparse 
 import stripe
 
@@ -67,7 +67,12 @@ def create_user():
         return "username created"
     #insert into table
 
-
+@app.route('/current_member/', methods = ['GET'])
+def current_user():
+    if session['id']:
+        return jsonify(User.get_user_by_userid(session['id']).serializable())
+    else:
+        return jsonify(False)
 
 @app.route('/search/', methods = ['GET'])
 def search():
@@ -115,6 +120,11 @@ def update_delivery(id):
 @app.route('/delivery/<id>', methods = ['GET'])
 def get_delivery(id):
     return json.dumps(Delivery.get_delivery_by_id(id).serializable())
+
+#gets a member 
+@app.route('/member/<id>', methods = ['GET'])
+def get_member(id):
+    return json.dumps(User.get_user_by_userid(id).serializable())
 
 #adds a new blank order to a delivery
 @app.route('/order', methods = ['POST'])

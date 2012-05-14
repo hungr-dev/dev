@@ -13,7 +13,7 @@
 
         // show the errors on the form
         $('.payment_errors').text(response.error.message);
-      }else{
+      } else {
         var form$ = $('#payment-form');
         // token contains id, last4, and card type
         var token = response['id'];

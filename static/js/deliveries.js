@@ -25,7 +25,7 @@ var RestaurantModel = Backbone.RelationalModel.extend({
 var DeliveryModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
-    creator: null,
+    member: null,
     restaurant: null,
     order_time: null,
     delivery_location: null,
@@ -33,6 +33,10 @@ var DeliveryModel = Backbone.RelationalModel.extend({
   },
   urlRoot: 'delivery',
   relations: [{
+    type: Backbone.HasOne,
+    key: 'member',
+    relatedModel: 'MemberModel',
+  }, {
     type: Backbone.HasOne,
     key: 'restaurant',
     relatedModel: 'RestaurantModel',
@@ -46,22 +50,26 @@ var DeliveryModel = Backbone.RelationalModel.extend({
 var OrderModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
-    member: "",
+    member: null,
     food_items: new FoodItemCollection([])
   },
   relations: [{
+    type: Backbone.HasOne,
+    key: 'member',
+    relatedModel: 'MemberModel',
+  }, {
     type: Backbone.HasMany,
     key: 'food_items',
     relatedModel: 'FoodItemModel',
     collectionType: 'FoodItemCollection',
   }]
 });
-var MemberModel = Backbone.Model.extend({
+var MemberModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
-    photoURL: "",
     name: "Anonymous"
   },
+  urlRoot: 'member',
 });
 var FoodItemModel = Backbone.RelationalModel.extend({
   defaults: {
@@ -95,28 +103,21 @@ var DeliveryView = Backbone.View.extend({
     var html, viewData;
 
     // Compile the template using underscore
-    console.log(this.model);
     if (this.model === null) {
       html = _.template($('#delivery-initial-html').html());;
     } else if (this.model.get('restaurant') === null) {
-      console.log(this.model);
       html = _.template($('#delivery-loading-html').html());
     } else {
-      var foodItems;
-      if (this.model.get('orders').length > 0) {
-        foodItems = this.model.get('orders').at(0).get('food_items');
-      } else {
-        foodItems = [];
-      }
-
       viewData = {
         id: this.model.id,
+        delivery: this.model,
         orderTime: (this.model.get('order_time') === null ? '' : this.model.get('order_time')),
         deliveryLocation: (this.model.get('delivery_location') === null ? '' : this.model.get('delivery_location')),
         restaurantName: this.model.get('restaurant').get('name'),
         restaurantPhone: this.model.get('restaurant').get('phone'),
         restaurantAddress: this.model.get('restaurant').get('address'),
-        foodItems: foodItems,
+        orders: this.model.get('orders'),
+        me: hungr.currentMember,
       }
       html = _.template($('#delivery-html').html(), viewData);
     }

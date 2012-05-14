@@ -5,6 +5,16 @@ hungr.init = function(){
 	hungr.searchModel = new SearchModel({deliveryView: hungr.deliveryView})
 	hungr.searchView = new SearchView({model: hungr.searchModel});
 	hungr.appRouter = new AppRouter();
+	$.ajax('current_member', {
+	  success: function (data) {
+	    hungr.currentMember = new MemberModel();
+	    hungr.currentMember.id = data.id;
+	    hungr.currentMember.fetch();
+	  },
+	  async: false,
+	  method: 'get',
+	  dataType: 'json'
+	});
 };
 
 $(document).ready(function(){
