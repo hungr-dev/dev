@@ -25,6 +25,7 @@ var RestaurantModel = Backbone.RelationalModel.extend({
     rating: 0,
     food_items: new FoodItemCollection([]),
   },
+  urlRoot: 'restaurant',
   relations: [{
     type: Backbone.HasMany,
     key: 'food_items',
@@ -60,9 +61,11 @@ var DeliveryModel = Backbone.RelationalModel.extend({
 var OrderModel = Backbone.RelationalModel.extend({
   defaults: {
     id: null,
+    delivery_id: null,
     member: null,
     food_items: new FoodItemCollection([])
   },
+  urlRoot: 'order',
   relations: [{
     type: Backbone.HasOne,
     key: 'member',
@@ -87,6 +90,7 @@ var FoodItemModel = Backbone.RelationalModel.extend({
     name: "",
     price: 0.0,
   },
+  urlRoot: 'food_item',
 });
 var FoodItemAndQuantityModel = Backbone.RelationalModel.extend({
   defaults: {
@@ -140,7 +144,7 @@ var DeliveryView = Backbone.View.extend({
       }
       if (myOrder == null) {
         myOrder = new OrderModel();
-        myOrder.save({deliveryID: this.id});
+        myOrder.save({delivery_id: this.model.id});
       }
 
       viewData = {
@@ -218,6 +222,15 @@ var DeliveryView = Backbone.View.extend({
       newRow.find('input.food-item-quantity').change(function () {
         updateMyOrder();
       });
+      newRow.find('a.delete-food-item').click(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).parent().remove();
+        updateMyOrder();
+
+        return false
+      });
 
       return false;
     });
@@ -235,6 +248,16 @@ var DeliveryView = Backbone.View.extend({
 
     $('input.food-item-quantity').change(function () {
       updateMyOrder();
+    });
+
+    $('a.delete-food-item').click(function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      $(this).parent().remove();
+      updateMyOrder();
+
+      return false
     });
 
     return this; // for method chaining

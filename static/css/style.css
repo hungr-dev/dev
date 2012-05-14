@@ -34,6 +34,7 @@ input {
 		background: #eee;
 		padding: 20px 15px 15px;
 		border-bottom: 1px solid #053d60;
+		display: none;
 	}
 		#header h1 {
 			background: url('../img/hungr_small_logo.png') no-repeat 0 0;
@@ -82,7 +83,7 @@ input {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		top: 156px;
+		top: 96px;
 		overflow-y: auto;
 	}
 		#results-wrapper div.result {
