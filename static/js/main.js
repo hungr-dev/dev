@@ -1,5 +1,15 @@
 var hungr = {};
 
+/**
+ * Helper functions
+ */
+var formatTelephone = function(telephone) {
+	return '(' + telephone.substr(0, 3) + ') ' + telephone.substr(3, 3) + '-' + telephone.substr(6, 4);
+}
+var formatPrice = function(price) {
+	return '$' + price + '.00';
+}
+
 hungr.init = function(){
 	hungr.deliveryView = new DeliveryView();
 	hungr.searchModel = new SearchModel({deliveryView: hungr.deliveryView})

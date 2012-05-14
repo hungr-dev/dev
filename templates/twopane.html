@@ -36,7 +36,7 @@
 	<script id="delivery-html" type="text/template">
 		<a class="share-button button" id=<%= id %>>Share</a>
 		<div id="restaurant-info">
-			<span id="restaurant-phone"><%= restaurantPhone.substr(0, 3) %>-<%= restaurantPhone.substr(3, 3) %>-<%= restaurantPhone.substr(6, 4) %></span>
+			<span id="restaurant-phone"><%= formatTelephone(restaurantPhone) %></span>
 			<h2 id="restaurant-name"><%= restaurantName %></h2>
 			<address>
 				<%= restaurantAddress.street %><br />
@@ -67,9 +67,9 @@
 							<% for (var j = 0; j < orders.at(i).get('food_items').length; j++) { %>
 								<% foodItem = orders.at(i).get('food_items').at(j) %>
 								<li class="food-item">
-									<span class="icon">q</span><input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItem.get('quantity') %>" placeholder="Qty." />
-									<span class="icon">f</span><input data-icon="f" type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItem.get('name') %>" placeholder="Dish name" />
-									<span class="icon">p</span><input data-icon="p" type="text" name="food-item-<%= i %>-price" id="food-item-<%= i %>-price" value="<%= foodItem.get('price') %>" placeholder="Price" />
+									<span class="icon">q</span><span id="food-item-<%= i %>-quantity"><%= foodItem.get('quantity') %></span>
+									<span class="icon">f</span><span id="food-item-<%= i %>-name"><%= foodItem.get('name') %></span>
+									<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('price')) %></span>
 								</li>
 							<% } %>
 						</ul>
@@ -87,7 +87,7 @@
 						<li class="food-item">
 							<span class="icon">q</span><input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItem.get('quantity') %>" placeholder="Qty." />
 							<span class="icon">f</span><input data-icon="f" type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItem.get('name') %>" placeholder="Dish name" />
-							<span class="icon">p</span><input data-icon="p" type="text" name="food-item-<%= i %>-price" id="food-item-<%= i %>-price" value="<%= foodItem.get('price') %>" placeholder="Price" />
+							<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('price')) %></span>
 						</li>
 					<% } %>
 				<% } %>
