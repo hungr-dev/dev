@@ -1,10 +1,12 @@
 <html>
 <head>
 	<link rel="stylesheet" href="./static/css/style.css" type="text/css">
+	<link rel="stylesheet" href="./static/css/ui.css" type="text/css">
 	<link href="//get.pictos.cc/fonts/718/5" rel="stylesheet" type="text/css">
 
 	<!-- Load libraries -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="./static/js/jquery-ui.js" type="text/javascript"></script>
 	<script src="./static/js/underscore-min.js" type="text/javascript"></script>
 	<script src="./static/js/backbone.js" type="text/javascript"></script>
 	<script src="./static/js/backbone-relational.js" type="text/javascript"></script>
@@ -56,20 +58,17 @@
 		<% } %>
 		
 		<ul id="orders">
-			<% myOrder = null %>
 			<% for (var i = 0; i < orders.length; i++) { %>
-				<% if (me === orders.at(i).get('member')) { %>
-					<% myOrder = orders.at(i) %>
-				<% } else { %>
+				<% if (me !== orders.at(i).get('member')) { %>
 					<li class="order">
-						<h3><%= orders.at(i).get('member').get('name') %> (NOT YOU)</h3>
+						<h3><%= orders.at(i).get('member').get('name') %></h3>
 						<ul class="food-items">
 							<% for (var j = 0; j < orders.at(i).get('food_items').length; j++) { %>
 								<% foodItem = orders.at(i).get('food_items').at(j) %>
 								<li class="food-item">
 									<span class="icon">q</span><span id="food-item-<%= i %>-quantity"><%= foodItem.get('quantity') %></span>
-									<span class="icon">f</span><span id="food-item-<%= i %>-name"><%= foodItem.get('name') %></span>
-									<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('price')) %></span>
+									<span class="icon">f</span><span id="food-item-<%= i %>-name"><%= foodItem.get('food_item').get('name') %></span>
+									<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('food_item').get('price')) %></span>
 								</li>
 							<% } %>
 						</ul>
@@ -78,22 +77,38 @@
 			<% } %>
 		</ul>
 
-		<div id="my-order">
+		<div id="my-order" data-order-id="<%= myOrder.id %>">
 			<h3>My order</h3>
 			<ul class="food-items">
-				<% if (myOrder !== null) { %>
-					<% for (var j = 0; j < myOrder.get('food_items').length; j++) { %>
-						<% foodItem = myOrder.get('food_items').at(j) %>
-						<li class="food-item">
-							<span class="icon">q</span><input type="text" name="food-item-<%= i %>-quantity" id="food-item-<%= i %>-quantity" value="<%= foodItem.get('quantity') %>" placeholder="Qty." />
-							<span class="icon">f</span><input data-icon="f" type="text" name="food-item-<%= i %>-name" id="food-item-<%= i %>-name" value="<%= foodItem.get('name') %>" placeholder="Dish name" />
-							<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('price')) %></span>
-						</li>
-					<% } %>
+				<% for (var j = 0; j < myOrder.get('food_items').length; j++) { %>
+					<% foodItem = myOrder.get('food_items').at(j) %>
+					<li class="food-item" data-food-item-id="<%= foodItem.get('food_item').id %>">
+						<span class="icon">q</span><input type="text" value="<%= foodItem.get('quantity') %>" class="food-item-quantity" placeholder="Qty." />
+						<span class="icon">f</span><input type="text" value="<%= foodItem.get('food_item').get('name') %>" class="food-item-name" placeholder="Dish name" />
+						<span class="icon">p</span><span class="food-item-price"><%= formatPrice(foodItem.get('food_item').get('price')) %></span>
+					</li>
 				<% } %>
+				<li class="food-item template">
+					<span class="icon">q</span><input type="text" class="food-item-quantity" placeholder="Qty." />
+					<span class="icon">f</span><input type="text" class="food-item-name" placeholder="Dish name" />
+					<span class="icon">p</span><span class="food-item-price">-</span>
+				</li>
 			</ul>
 			<a href="#" id="add-food-item">Add food item</a>
 		</div>
+
+		<% if (me === delivery.get('member')) { %>
+			<form id="payment-info">
+				<span class="icon">t</span><input type="text" id="cc-number" placeholder="Credit card number" />
+				<span class="icon">l</span><input type="text" id="cc-cvv" placeholder="CVV" />
+				<span class="icon">l</span><input type="text" id="cc-expiration" placeholder="Exp. (MM/YYYY)" />
+				<input type="submit" class="button" value="Submit this order!" />
+			</form>
+		<% } else { %>
+			<div id="final-info">
+				This order’s creator, <%= delivery.get('member').get('name') %>, will submit the order by <%= orderTime %>.
+			</div>
+		<% } %>
 	</script>
 	<script id="delivery-initial-html" type="text/template">
 		[Tips]

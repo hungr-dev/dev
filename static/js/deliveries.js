@@ -7,6 +7,9 @@ var OrderCollection = Backbone.Collection.extend({
 var FoodItemCollection = Backbone.Collection.extend({
   model: FoodItemModel
 });
+var FoodItemAndQuantityCollection = Backbone.Collection.extend({
+  model: FoodItemAndQuantityModel
+});
 
 /**
  * Models used in the Delivery section:
@@ -19,8 +22,15 @@ var RestaurantModel = Backbone.RelationalModel.extend({
     address: "",
     phone: "",
     description: "",
-    rating: 0
+    rating: 0,
+    food_items: new FoodItemCollection([]),
   },
+  relations: [{
+    type: Backbone.HasMany,
+    key: 'food_items',
+    relatedModel: 'FoodItemModel',
+    collectionType: 'FoodItemCollection',
+  }]
 });
 var DeliveryModel = Backbone.RelationalModel.extend({
   defaults: {
@@ -60,8 +70,8 @@ var OrderModel = Backbone.RelationalModel.extend({
   }, {
     type: Backbone.HasMany,
     key: 'food_items',
-    relatedModel: 'FoodItemModel',
-    collectionType: 'FoodItemCollection',
+    relatedModel: 'FoodItemAndQuantityModel',
+    collectionType: 'FoodItemAndQuantityCollection',
   }]
 });
 var MemberModel = Backbone.RelationalModel.extend({
@@ -76,8 +86,19 @@ var FoodItemModel = Backbone.RelationalModel.extend({
     id: null,
     name: "",
     price: 0.0,
+  },
+});
+var FoodItemAndQuantityModel = Backbone.RelationalModel.extend({
+  defaults: {
+    id: null,
+    food_item: null,
     quantity: 1
   },
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'food_item',
+    relatedModel: 'FoodItemModel',
+  }]
 });
 var LocationModel = Backbone.Model.extend({
   defaults: {
@@ -100,7 +121,9 @@ var DeliveryView = Backbone.View.extend({
     this.$el.hide();
   },
   render: function() {
-    var html, viewData;
+    var html, viewData, foodItemNames, foodItemNameIDMap;
+    foodItemNames = [];
+    foodItemNameIDMap = {};
 
     // Compile the template using underscore
     if (this.model === null) {
@@ -108,6 +131,18 @@ var DeliveryView = Backbone.View.extend({
     } else if (this.model.get('restaurant') === null) {
       html = _.template($('#delivery-loading-html').html());
     } else {
+      
+      var myOrder = null;
+      for (var i = 0; i < this.model.get('orders').length; i++) {
+        if (hungr.currentMember === this.model.get('orders').at(i).get('member')) {
+          myOrder = this.model.get('orders').at(i);
+        }
+      }
+      if (myOrder == null) {
+        myOrder = new OrderModel();
+        myOrder.save({deliveryID: this.id});
+      }
+
       viewData = {
         id: this.model.id,
         delivery: this.model,
@@ -117,13 +152,90 @@ var DeliveryView = Backbone.View.extend({
         restaurantPhone: this.model.get('restaurant').get('phone'),
         restaurantAddress: this.model.get('restaurant').get('address'),
         orders: this.model.get('orders'),
+        myOrder: myOrder,
         me: hungr.currentMember,
       }
       html = _.template($('#delivery-html').html(), viewData);
+
+      foodItemNames = [];
+      foodItemNameMap = {};
+      for (var i = 0; i < this.model.get('restaurant').get('food_items').length; i++) {
+        var foodItem = this.model.get('restaurant').get('food_items').at(i);
+        foodItemNames.push({
+          value: foodItem.get('name'), 
+          label: foodItem.get('name') + ' (' + formatPrice(foodItem.get('price')) + ')'
+        });
+        foodItemNameMap[foodItem.get('name')] = foodItem;
+      }
     }
 
     // Load the compiled HTML into the wrapper
     this.$el.html(html);
+
+    // Update order handler
+    var updateMyOrder = function () {
+      var data = [];
+
+      $('#my-order .food-item').each(function () {
+        if ($(this).data('food-item-id') !== undefined) {
+          console.log($(this).data('food-item-id'));
+          data.push({
+            id: $(this).data('food-item-id'),
+            quantity: $(this).find('.food-item-quantity').val(),
+          });
+        }
+      });
+
+      $.ajax('order/' + myOrder.id, {
+        data: JSON.stringify({fooditemsAndQuantities: data}),
+        dataType: 'json',
+        type: 'PUT',
+        contentType: 'application/json',
+        success: function () {
+
+        }
+      });
+    }
+
+    // Add food item button handler
+    $('#add-food-item').click(function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var newRow = $(this).siblings('ul.food-items').find('.template').clone();
+      newRow.removeClass('template');
+      $(this).siblings('ul.food-items').append(newRow);
+
+      newRow.find('input.food-item-name').autocomplete({
+        source: foodItemNames,
+        select: function (event, ui) {
+          var foodItem = foodItemNameMap[ui.item.value];
+          $(this).parents('li.food-item').data('food-item-id', foodItem.id);
+          $(this).siblings('span.food-item-price').text(formatPrice(foodItem.get('price')));
+          updateMyOrder();
+        }
+      });
+      newRow.find('input.food-item-quantity').change(function () {
+        updateMyOrder();
+      });
+
+      return false;
+    });
+
+    // Autocomplete
+    $('input.food-item-name').autocomplete({
+      source: foodItemNames,
+      select: function (event, ui) {
+        var foodItem = foodItemNameMap[ui.item.value];
+        $(this).parents('li.food-item').data('food-item-id', foodItem.id);
+        $(this).siblings('span.food-item-price').text(formatPrice(foodItem.get('price')));
+        updateMyOrder();
+      }
+    });
+
+    $('input.food-item-quantity').change(function () {
+      updateMyOrder();
+    });
 
     return this; // for method chaining
   },
@@ -141,6 +253,7 @@ var DeliveryView = Backbone.View.extend({
 
       that.render();
       that.$el.fadeIn();
+      $('#search-pane').animate({width: '35%', left: 0}, 500);
     });
   },
   joinDelivery: function (deliveryID) {
@@ -156,6 +269,7 @@ var DeliveryView = Backbone.View.extend({
 
       that.render();
       that.$el.fadeIn();
+      $('#search-pane').animate({width: '35%', left: 0}, 500);
     });
   },
   updateDeliveryTime: function () {

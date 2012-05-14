@@ -7,8 +7,33 @@ var formatTelephone = function(telephone) {
 	return '(' + telephone.substr(0, 3) + ') ' + telephone.substr(3, 3) + '-' + telephone.substr(6, 4);
 }
 var formatPrice = function(price) {
-	return '$' + price + '.00';
+	if (price === parseInt(price)) {
+		return '$' + price + '.00';
+	} else {
+		return '$' + price;
+	}
 }
+var JSON = JSON || {};
+JSON.stringify = JSON.stringify || function (obj) {
+	var t = typeof (obj);
+	if (t != "object" || obj === null) {
+		// simple data type
+		if (t == "string") obj = '"'+obj+'"';
+		return String(obj);
+	}
+	else {
+		// recurse array or object
+		var n, v, json = [], arr = (obj && obj.constructor == Array);
+		for (n in obj) {
+			v = obj[n]; t = typeof(v);
+			if (t == "string") v = '"'+v+'"';
+			else if (t == "object" && v !== null) v = JSON.stringify(v);
+			json.push((arr ? "" : '"' + n + '":') + String(v));
+		}
+		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+	}
+};
+
 
 hungr.init = function(){
 	hungr.deliveryView = new DeliveryView();
@@ -22,7 +47,7 @@ hungr.init = function(){
 	    hungr.currentMember.fetch();
 	  },
 	  async: false,
-	  method: 'get',
+	  type: 'GET',
 	  dataType: 'json'
 	});
 };

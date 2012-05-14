@@ -13,6 +13,7 @@ body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	background: #222 url('../img/delivery-pane.png') repeat top left;
 }
 input {
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, Arial, sans;
@@ -21,11 +22,11 @@ input {
 	background: url('../img/stripes.png') repeat top left;
 	border-right: 1px solid #000;
 	height: 100%;
-	width: 50%;
-	left: 0;
+	width: 60%;
+	left: 20%;
 	top: 0;
 	z-index: 10;
-	-webkit-box-shadow: 5px 0 7px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.9);
 	position: absolute;
 	overflow-y: auto;
 }
@@ -120,12 +121,12 @@ input {
 				}
 #delivery-pane {
 	height: 100%;
-	width: 50%;
-	left: 50%;
+	width: 65%;
+	right: 0;
 	top: 0;
 	position: absolute;
 	overflow-y: auto;
-	background: #222 repeat top left;
+	background: #222 url('../img/delivery-pane.png') repeat top left;
 }
 	#delivery-pane #delivery {
 		margin: 40px;
@@ -153,7 +154,7 @@ input {
 		#delivery-pane #delivery address {
 			font-style: normal;
 		}
-		#delivery-pane #delivery input {
+		#delivery-pane #delivery input[type="text"] {
 			-webkit-border-radius: 3px;
 			-moz-border-radius: 3px;
 			border-radius: 3px;
@@ -205,6 +206,9 @@ input {
 			position: relative;
 			top: 2px;
 			margin-right: 10px;
+		}
+		#delivery-pane #delivery .template {
+			display: none;
 		}
 
 	.button,
