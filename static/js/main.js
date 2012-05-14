@@ -33,7 +33,13 @@ JSON.stringify = JSON.stringify || function (obj) {
 		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
 	}
 };
-
+var magic = 22801765351;
+var idToCode = function(id) {
+	return (parseInt(id) * magic).toString(36);
+}
+var codeToId = function (code) {
+	return parseInt(code, 36) / magic;
+}
 
 hungr.init = function(){
 	hungr.deliveryView = new DeliveryView();
@@ -60,15 +66,15 @@ $(document).ready(function(){
 var AppRouter = Backbone.Router.extend({
 	routes: {
 		'search/:query': 'search',
-		'delivery/:id': 'delivery'
+		'delivery/:code': 'delivery'
 	},
 	search: function(query) {
 		hungr.searchView.search(query);
 		hungr.searchView.updateSearchDisplay(query);
 		return;
 	},
-	delivery: function(id) {
-		hungr.deliveryView.joinDelivery(id);
+	delivery: function(code) {
+		hungr.deliveryView.joinDelivery(codeToId(code));
 		return;
 	}
 });

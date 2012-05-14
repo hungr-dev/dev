@@ -105,12 +105,12 @@ var ResultView = Backbone.View.extend({
 	createDelivery: function () {
 		var deliveryId = this.model.get('id');
 		this.model.get('deliveryView').createDelivery(deliveryId);
-		hungr.appRouter.navigate('delivery/' + deliveryId);
+		hungr.appRouter.navigate('delivery/' + idToCode(deliveryId));
 	},
 	joinDelivery: function(ev) {
 		console.log($(ev.target).attr('id'))
 		var deliveryId = $(ev.target).attr('id');
 		this.model.get('deliveryView').joinDelivery(deliveryId);
-		hungr.appRouter.navigate('delivery/' + deliveryId); 
+		hungr.appRouter.navigate('delivery/' + idToCode(deliveryId)); 
 	}
 });
