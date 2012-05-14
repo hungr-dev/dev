@@ -39,23 +39,40 @@
 	<script id="delivery-html" type="text/template">
 		<a class="share-button button" id=<%= id %>>Share</a>
 		<div id="restaurant-info">
-			<span id="restaurant-phone"><%= formatTelephone(restaurantPhone) %></span>
-			<h2 id="restaurant-name"><%= restaurantName %></h2>
+			<h2 id="restaurant-name"><%= restaurantName %> <span id="restaurant-phone"><%= formatTelephone(restaurantPhone) %></span></h2>
 			<address>
 				<%= restaurantAddress.street %><br />
 				<%= restaurantAddress.city %>, <%= restaurantAddress.state %>
 			</address>
 		</div>
 		<% if (me === delivery.get('member')) { %>
-			<form id="delivery-info">
-				<span class="icon">t</span><input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
-				<span class="icon">l</span><input data-icon="l" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+			<form id="delivery-info" class="actionable">
+				<div class="field delivery-time-field">
+					<span class="icon">t</span>
+					<input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
+					<span class="description">When the order is going out</span>
+				</div>
+				<div class="field delivery-location-field">
+					<span class="icon">l</span>
+					<input data-icon="l" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+					<span class="description">Where the order is being delivered</span>
+				</div>
+				<div class="clearer"></div>
 			</form>
 		<% } else { %>
-			<div id="delivery-info">
-				<span class="icon">t</span><span id="delivery-time"><%= orderTime %></span>
-				<span class="icon">l</span><span id="delivery-location"><%= deliveryLocation %></span>
-			</div>
+			<form id="delivery-info">
+				<div class="field delivery-time-field">
+					<span class="icon">t</span>
+					<input type="text" disabled="disabled" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
+					<span class="description">When the order is going out</span>
+				</div>
+				<div class="field delivery-location-field">
+					<span class="icon">l</span>
+					<input data-icon="l" disabled="disabled" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+					<span class="description">Where the order is being delivered</span>
+				</div>
+				<div class="clearer"></div>
+			</form>
 		<% } %>
 		
 		<ul id="orders">

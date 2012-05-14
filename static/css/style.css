@@ -7,12 +7,14 @@ html {
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, Arial, sans;
 	margin: 0;
 	padding: 0;
+	min-width: 800px;
 }
 body {
 	width: 100%;
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	min-width: 800px;
 	background: #222 url('../img/delivery-pane.png') repeat top left;
 }
 input {
@@ -55,7 +57,7 @@ input {
 		padding: 25px;
 		-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
 		-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
-		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
+		box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
 		border-top: 1px solid rgba(255, 255, 255, 0.4);
 		border-bottom: 1px solid #032a3a;
 	}
@@ -71,7 +73,7 @@ input {
 			color: #fff;
 			padding: 9px 9px 4px;
 			font-size: 1.2em;
-			width: 73%;
+			width: 65%;
 			background: #607989;
 			outline: none;
 			border: 1px solid #053d60;
@@ -96,12 +98,14 @@ input {
 	}
 		#results-wrapper div.result {
 			border-top: 1px solid #fff;
-			border-bottom: 1px solid #ddd;
+			border-bottom: 1px solid #bbb;
 			padding: 15px;
-			background: #fff;
-			-webkit-box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
-			-moz-box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
-			box-shadow: inset 0 -5px 10px rgba(230, 236, 236, 0.5), 0 3px 7px rgba(0, 0, 0, 0.4);
+			background: #eee -webkit-linear-gradient(top, rgba(255,255,255,.06) 10%,rgba(0,0,0,.06) 100%);
+			-webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+			box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+			color: #222;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 		}
 			#results-wrapper div.result .result-name {
 				font-weight: bold;
@@ -123,7 +127,7 @@ input {
 			}
 			#results-wrapper div.result div.result-buttons {
 				float: right;
-				margin: 5px 5px 0 0;
+				margin: 5px 5px 0 20px;
 			}
 				#results-wrapper div.result div.result-buttons a.button {
 					float: left;
@@ -155,8 +159,8 @@ input {
 			padding: 0;
 		}
 		#delivery-pane #delivery span#restaurant-phone {
-			float: right;
-			font-size: 1.9em;
+			font-weight: normal;
+			margin-left: 10px;
 			letter-spacing: 0.05em;
 			color: #aaa;
 		}
@@ -164,30 +168,40 @@ input {
 			font-style: normal;
 		}
 		#delivery-pane #delivery input[type="text"] {
-			-webkit-border-radius: 3px;
-			-moz-border-radius: 3px;
-			border-radius: 3px;
-			border: 1px solid rgba(0, 0, 0, 0.2);
-			-webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.9);
-			-moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.9);
-			box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.9);
-			padding: 7px 7px 1px;
+			border: none;
+			background: transparent;
+			border-bottom: 1px dashed #333;
+			padding: 0 7px;
 			font-size: 1.7em;
 		}
-			#delivery-pane #delivery input::before {
-				content: attr('data-icon');
-				font-family: 'Pictos Custom';
-				-webkit-font-smoothing: antialiased;
+			#delivery-pane #delivery input[type="text"]:focus {
+				outline: none;
+				border-bottom-color: #333;
+			}
+		#delivery-pane #delivery div.field {
+			float: left;
+		}
+			#delivery-pane #delivery div.field span.description {
+				display: block;
+				font-size: 0.75em;
+				margin-top: -5px;
+				color: #aaa;
 			}
 		#delivery-pane #delivery form#delivery-info {
-			margin: 20px 0 25px;
+			margin: 10px 0 25px;
+			padding-top: 0;
 		}
 			#delivery-pane #delivery form#delivery-info input {
 				width: 300px;
 				margin-right: 15px;
 			}
-				#delivery-pane #delivery form#delivery-info input:nth-child(2) {
-					width: 150px;
+			#delivery-pane #delivery form#delivery-info span.icon {
+				border-bottom: 1px dashed #333;
+				line-height: 1.9em;
+				margin-right: 0;
+			}
+				#delivery-pane #delivery form#delivery-info div.field:nth-child(1) input {
+					width: 170px;
 				}
 		#delivery-pane #delivery form#order-form ul {
 			color: #666;
@@ -324,4 +338,17 @@ input {
 	padding: 13px 14px 6px;
 	margin-left: 15px;
 	background-color: #91D48E !important;
+}
+
+div.clearer {
+	clear: both;
+}
+
+.actionable {
+	padding: 15px;
+	border: 1px solid #aaa;
+}
+
+.share-button {
+	float: right;
 }
