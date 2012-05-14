@@ -23,15 +23,16 @@ def quans_scrape():
 
 @app.route('/stripe_form', methods=['GET','POST'])
 def stripe_form():
-    stripe.api_key = 'S3fvQ38xFzJKWaKSVz4oZw6YZZ5S9FAD'  #this is the secret api key (this one is the test key)
-    token = request.form['stripeToken']
-    print "stripe token:",token
-    stripe.Charge.create(
-        amount=100, #price in cents
-        currency="usd",
-        card=token,
-        description="Charge for hungr-dev@mit.edu"  #optional field
-    )
+    if request.method=='POST':
+        stripe.api_key = 'S3fvQ38xFzJKWaKSVz4oZw6YZZ5S9FAD'  #this is the secret api key (this one is the test key)
+        token = request.form['stripeToken']
+        print "stripe token:",token
+        stripe.Charge.create(
+            amount=100, #price in cents
+            currency="usd",
+            card=token,
+            description="Charge for hungr-dev@mit.edu"  #optional field
+        )
     return render_template('form.html')
 
 @app.route('/',methods=['GET'])
