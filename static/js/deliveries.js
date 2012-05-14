@@ -182,7 +182,6 @@ var DeliveryView = Backbone.View.extend({
 
       $('#my-order .food-item').each(function () {
         if ($(this).data('food-item-id') !== undefined) {
-          console.log($(this).data('food-item-id'));
           data.push({
             id: $(this).data('food-item-id'),
             quantity: $(this).find('.food-item-quantity').val(),
@@ -207,15 +206,16 @@ var DeliveryView = Backbone.View.extend({
       e.preventDefault();
 
       var newRow = $(this).siblings('ul.food-items').find('.template').clone();
-      newRow.removeClass('template');
+      newRow.removeClass('template').hide();
       $(this).siblings('ul.food-items').append(newRow);
+      newRow.slideDown(250);
 
       newRow.find('input.food-item-name').autocomplete({
         source: foodItemNames,
         select: function (event, ui) {
           var foodItem = foodItemNameMap[ui.item.value];
           $(this).parents('li.food-item').data('food-item-id', foodItem.id);
-          $(this).siblings('span.food-item-price').text(formatPrice(foodItem.get('price')));
+          $(this).parents('li.food-item').find('input.food-item-price').val(formatPrice(foodItem.get('price')));
           updateMyOrder();
         }
       });
@@ -226,10 +226,12 @@ var DeliveryView = Backbone.View.extend({
         e.stopPropagation();
         e.preventDefault();
 
-        $(this).parent().remove();
-        updateMyOrder();
+        $(this).parents('li.food-item').slideUp(250, function () {
+          $(this).remove();
+          updateMyOrder();
+        });
 
-        return false
+        return false;
       });
 
       return false;

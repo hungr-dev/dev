@@ -7,11 +7,14 @@ var formatTelephone = function(telephone) {
 	return '(' + telephone.substr(0, 3) + ') ' + telephone.substr(3, 3) + '-' + telephone.substr(6, 4);
 }
 var formatPrice = function(price) {
-	if (price === parseInt(price)) {
-		return '$' + price + '.00';
-	} else {
-		return '$' + price;
+	var cents = (parseFloat(price) * 100) % 100;
+	var dollars = parseInt(price);
+
+	if (cents < 10) {
+		cents = '0' + cents;
 	}
+
+	return '$' + dollars + '.' + cents;
 }
 var JSON = JSON || {};
 JSON.stringify = JSON.stringify || function (obj) {

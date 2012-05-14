@@ -126,11 +126,39 @@ input {
 				color: #888;
 			}
 			#results-wrapper div.result div.result-buttons {
-				float: right;
-				margin: 5px 5px 0 20px;
+				padding-top: 10px;
 			}
-				#results-wrapper div.result div.result-buttons a.button {
+				#results-wrapper div.result div.result-buttons a {
 					float: left;
+				}
+			a.create-button {
+				background: transparent;
+				color: #292;
+				font-size: 1.7em;
+				cursor: pointer;
+			}
+				a.create-button::before {
+					content: '+';
+					font-family: 'Pictos Custom';
+					font-size: 1.4em;
+					position: relative;
+					top: 4px;
+					margin-right: 10px;
+				}
+			a.join-button {
+				background: transparent;
+				color: #1B5A85;
+				font-size: 1.7em;
+				cursor: pointer;
+				margin-right: 20px;
+			}
+				a.join-button::before {
+					content: 't';
+					font-family: 'Pictos Custom';
+					font-size: 1.4em;
+					position: relative;
+					top: 5px;
+					margin-right: 2px;
 				}
 #delivery-pane {
 	height: 100%;
@@ -145,6 +173,8 @@ input {
 		margin: 40px;
 		background: #f5f5f5;
 		padding: 20px;
+		min-width: 690px;
+		overflow-x: auto;
 		-webkit-border-radius: 1px;
 		-moz-border-radius: 1px;
 		border-radius: 1px;
@@ -195,7 +225,7 @@ input {
 				width: 300px;
 				margin-right: 15px;
 			}
-			#delivery-pane #delivery form#delivery-info span.icon {
+			#delivery-pane #delivery div.field span.icon {
 				border-bottom: 1px dashed #333;
 				line-height: 1.9em;
 				margin-right: 0;
@@ -265,8 +295,7 @@ input {
 		  padding: 8px 10px;
 		  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 		  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-		  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-		  font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+		  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5); }
 
 		.button:hover,
 		button:hover,
@@ -331,24 +360,177 @@ input {
 		position: relative;
 		top: 1px;
 	}
-.create-button {
-	font-family: 'Pictos Custom';
-	-webkit-font-smoothing: antialiased;
-	font-size: 2em;
-	padding: 13px 14px 6px;
-	margin-left: 15px;
-	background-color: #91D48E !important;
-}
 
 div.clearer {
 	clear: both;
 }
 
 .actionable {
-	padding: 15px;
-	border: 1px solid #aaa;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	margin: 15px 0 20px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 }
+	.actionable div.inner {
+		padding: 0 15px 15px;
+	}
+		.actionable div.inner p {
+			padding: 15px 0 0;
+			margin: 0;
+		}
+	.actionable > h3 {
+		padding: 7px 15px;
+		color: #444;
+		margin: 0;
+		background: #ddd;
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+	}
+
+#my-order div.field {
+	margin-right: 15px;
+}
+	#my-order div.field input {
+		margin: 0;
+	}
+	#my-order div.name-field input {
+		width: 300px;
+		font-size: 1.2em !important;
+		line-height: 1.6em !important;
+	}
+	#my-order div.quantity-field input {
+		width: 100px;
+	}
+	#my-order div.price-field input {
+		width: 100px;
+	}
+#my-order li.food-item:first-child {
+	padding-top: 0;
+}
+	#my-order li.food-item:not(:first-child) {
+		
+	}
+
+ul.food-items {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+form#payment-info {
+	margin-bottom: 0;
+	margin-top: 20px;
+}
+
+h3 {
+	margin-bottom: 5px;
+}
+
+.ui-autocomplete {
+	max-width: 400px;
+	max-height: 200px;
+	overflow: auto;
+}
+	.ui-autocomplete li {
+		font-size: 0.8em;
+		padding: 5px 10px;
+	}
+
+.delete-food-item {
+	font-family: 'Pictos Custom';
+	-webkit-font-smoothing: antialiased;
+	font-size: 2em;
+	text-decoration: none;
+	display: block;
+	float: right;
+	padding: 10px;
+	margin: 10px 0 0;
+	color: #c55;
+}
+
+#add-food-item {
+	color: #292;
+	text-decoration: none;
+	margin-top: 5px;
+	display: block;
+}
+	#add-food-item::before {
+		content: '+';
+		font-family: 'Pictos Custom';
+		font-size: 2em;
+		position: relative;
+		top: 5px;
+		margin-right: 10px;
+	}
+
+div.cc-number-field input {
+	width: 240px;
+	font-size: 1.4em !important;
+	line-height: 1.4 !important;
+	margin-right: 15px;
+}
+div.cc-cvv-field input {
+	width: 80px;
+	font-size: 1.4em !important;
+	line-height: 1.4 !important;
+	margin-right: 15px;
+}
+div.cc-expiration-field input {
+	width: 200px;
+	font-size: 1.4em !important;
+	line-height: 1.4 !important;
+}
+
+#submit {
+	color: #292;
+	text-decoration: none;
+	background: transparent;
+	border: none;
+	outline: none;
+	display: block;
+	font-size: 1.3em;
+	cursor: pointer;
+}
+	#submit::before {
+		content: 'u';
+		font-family: 'Pictos Custom';
+		font-size: 2em;
+		position: relative;
+		top: 5px;
+		margin-right: 10px;
+	}
 
 .share-button {
 	float: right;
+	color: #FFB20D;
+	font-size: 1.7em;
+	cursor: pointer;
 }
+	.share-button::before {
+		content: 's';
+		font-family: 'Pictos Custom';
+		font-size: 1.4em;
+		position: relative;
+		top: 5px;
+		margin-right: 6px;
+	}
+
+table#orders {
+	margin: 15px 0 0;
+	width: 100%;
+	border-radius: 3px;
+	border: 1px solid #E6E6C8;
+}
+	tr.name td {
+		background: #E6E6C8;
+		padding: 10px;
+		font-weight: bold;
+	}
+	td {
+		border-bottom: 1px solid #E6E6C8;
+		padding: 10px;
+	}
+		#delivery-pane #delivery td span.icon {
+			font-size: 1em;
+			color: #999;
+		}

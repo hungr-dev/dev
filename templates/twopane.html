@@ -21,23 +21,24 @@
 	</script>
 
 	<script id="result-html" type="text/template">
-		<div class="result-buttons">
-			<% _.each(result_deliveries, function(delivery){ %>
-				<a class="join-delivery-button button" id=<%= delivery[0] %> >
-					<%= delivery[1] %>
-				</a>
-			<% }); %>
-			<a class="create-button button">+</a>
-		</div>
 		<div class="result-text">
 			<div class="result-name"><%= result_name %></div>
 			<div class="result-address"><%= result_address_city %></div>
 			<div class="result-cuisines"><%= result_cuisines %><% if (result_food_items !== '') { %>: <% } %><%= result_food_items %></div>
 		</div>
+		<div class="result-buttons">
+			<% _.each(result_deliveries, function(delivery){ %>
+				<a class="join-button" id=<%= delivery[0] %> >
+					<%= delivery[1] %>
+				</a>
+			<% }); %>
+			<a class="create-button">Start new</a>
+		</div>
+		<div class="clearer"></div>
 	</script>
 
 	<script id="delivery-html" type="text/template">
-		<a class="share-button button" id=<%= id %>>Share</a>
+		<a class="share-button" id=<%= id %>>Share</a>
 		<div id="restaurant-info">
 			<h2 id="restaurant-name"><%= restaurantName %> <span id="restaurant-phone"><%= formatTelephone(restaurantPhone) %></span></h2>
 			<address>
@@ -47,17 +48,20 @@
 		</div>
 		<% if (me === delivery.get('member')) { %>
 			<form id="delivery-info" class="actionable">
-				<div class="field delivery-time-field">
-					<span class="icon">t</span>
-					<input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
-					<span class="description">When the order is going out</span>
+				<h3>Where and when is it going?</h3>
+				<div class="inner">
+					<div class="field delivery-time-field">
+						<span class="icon">t</span>
+						<input type="text" name="delivery-time" id="delivery-time" value="<%= orderTime %>" placeholder="Order time" />
+						<span class="description">When the order is going out</span>
+					</div>
+					<div class="field delivery-location-field">
+						<span class="icon">l</span>
+						<input data-icon="l" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
+						<span class="description">Where the order is being delivered</span>
+					</div>
+					<div class="clearer"></div>
 				</div>
-				<div class="field delivery-location-field">
-					<span class="icon">l</span>
-					<input data-icon="l" type="text" name="delivery-location" id="delivery-location" value="<%= deliveryLocation %>" placeholder="Delivery location" />
-					<span class="description">Where the order is being delivered</span>
-				</div>
-				<div class="clearer"></div>
 			</form>
 		<% } else { %>
 			<form id="delivery-info">
@@ -74,61 +78,111 @@
 				<div class="clearer"></div>
 			</form>
 		<% } %>
-		
-		<ul id="orders">
-			<% for (var i = 0; i < orders.length; i++) { %>
-				<% if (me !== orders.at(i).get('member')) { %>
-					<li class="order">
-						<h3><%= orders.at(i).get('member').get('name') %></h3>
-						<ul class="food-items">
-							<% for (var j = 0; j < orders.at(i).get('food_items').length; j++) { %>
-								<% foodItem = orders.at(i).get('food_items').at(j) %>
-								<li class="food-item">
-									<span class="icon">q</span><span id="food-item-<%= i %>-quantity"><%= foodItem.get('quantity') %></span>
-									<span class="icon">f</span><span id="food-item-<%= i %>-name"><%= foodItem.get('food_item').get('name') %></span>
-									<span class="icon">p</span><span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('food_item').get('price')) %></span>
-								</li>
-							<% } %>
-						</ul>
-					</li>
-				<% } %>
-			<% } %>
-		</ul>
 
-		<div id="my-order" data-order-id="<%= myOrder.id %>">
-			<h3>My order</h3>
-			<ul class="food-items">
-				<% for (var j = 0; j < myOrder.get('food_items').length; j++) { %>
-					<% foodItem = myOrder.get('food_items').at(j) %>
-					<li class="food-item" data-food-item-id="<%= foodItem.get('food_item').id %>">
+		<div id="my-order" class="actionable" data-order-id="<%= myOrder.id %>">
+			<h3>What’ll you have?</h3>
+			<div class="inner">
+				<ul class="food-items">
+					<% for (var j = 0; j < myOrder.get('food_items').length; j++) { %>
+						<% foodItem = myOrder.get('food_items').at(j) %>
+						<li class="food-item" data-food-item-id="<%= foodItem.get('food_item').id %>">
+							<a href="#" class="delete-food-item">X</a>
+							<div class="field name-field">
+								<span class="icon">f</span>
+								<input type="text" value="<%= foodItem.get('food_item').get('name') %>" class="food-item-name" placeholder="Dish name" />
+							</div>
+							<div class="field quantity-field">
+								<span class="icon">q</span>
+								<input type="text" value="<%= foodItem.get('quantity') %>" class="food-item-quantity" placeholder="Qty." />
+							</div>
+							<div class="field price-field">
+								<span class="icon">p</span>
+								<input type="text" disabled="disabled" class="food-item-price" value="<%= formatPrice(foodItem.get('food_item').get('price')) %>" />
+							</div>
+							<div class="clearer"></div>
+						</li>
+					<% } %>
+					<li class="food-item template">
 						<a href="#" class="delete-food-item">X</a>
-						<span class="icon">q</span><input type="text" value="<%= foodItem.get('quantity') %>" class="food-item-quantity" placeholder="Qty." />
-						<span class="icon">f</span><input type="text" value="<%= foodItem.get('food_item').get('name') %>" class="food-item-name" placeholder="Dish name" />
-						<span class="icon">p</span><span class="food-item-price"><%= formatPrice(foodItem.get('food_item').get('price')) %></span>
+						<div class="field name-field">
+							<span class="icon">f</span><input type="text" class="food-item-name" placeholder="Dish name" />
+						</div>
+						<div class="field quantity-field">
+							<span class="icon">q</span><input type="text" class="food-item-quantity" placeholder="Qty." />
+						</div>
+						<div class="field price-field">
+							<span class="icon">p</span><input type="text" disabled="disabled" class="food-item-price" value="&mdash;"/>
+						</div>
+						<div class="clearer"></div>
 					</li>
-				<% } %>
-				<li class="food-item template">
-					<a href="#" class="delete-food-item">X</a>
-					<span class="icon">q</span><input type="text" class="food-item-quantity" placeholder="Qty." />
-					<span class="icon">f</span><input type="text" class="food-item-name" placeholder="Dish name" />
-					<span class="icon">p</span><span class="food-item-price">-</span>
-				</li>
-			</ul>
-			<a href="#" id="add-food-item">Add food item</a>
+				</ul>
+				<a href="#" id="add-food-item">Add food item</a>
+			</div>
 		</div>
 
 		<% if (me === delivery.get('member')) { %>
-			<form id="payment-info">
-				<span class="icon">t</span><input type="text" id="cc-number" placeholder="Credit card number" />
-				<span class="icon">l</span><input type="text" id="cc-cvv" placeholder="CVV" />
-				<span class="icon">l</span><input type="text" id="cc-expiration" placeholder="Exp. (MM/YYYY)" />
-				<input type="submit" class="button" value="Submit this order!" />
+			<form id="payment-info" class="actionable">
+			<h3>Ready to go?</h3>
+				<div class="inner">
+					<div class="field cc-number-field">
+						<span class="icon">a</span><input type="text" id="cc-number" placeholder="Credit card number" />
+					</div>
+					<div class="field cc-cvv-field">
+						<span class="icon">v</span><input type="text" id="cc-cvv" placeholder="CVV" />
+					</div>
+					<div class="field cc-expiration-field">
+						<span class="icon">x</span><input type="text" id="cc-expiration" placeholder="Exp. (MM/YYYY)" />
+					</div>
+					<div class="clearer"></div>
+					<a id="submit">Submit this order!</a>
+				</div>
 			</form>
 		<% } else { %>
-			<div id="final-info">
-				This order’s creator, <%= delivery.get('member').get('name') %>, will submit the order by <%= orderTime %>.
+			<div class="actionable">
+				<h3>Getting hungry?</h3>
+				<div class="inner">
+					<p>
+						This order’s creator, <%= delivery.get('member').get('name') %>, will submit the order by <%= orderTime %>.
+					</p>
+				</div>
 			</div>
 		<% } %>
+
+		<div class="actionable" id="orders-wrapper">
+			<h3>Here’s what everyone else is having:</h3>
+			<div class="inner">
+				<% if (orders.length > 1) { %>
+					<table id="orders" cellspacing="0">
+						<% for (var i = 0; i < orders.length; i++) { %>
+							<% if (me !== orders.at(i).get('member')) { %>
+								<tr class="name">
+									<td colspan="3"><%= orders.at(i).get('member').get('name') %></td>
+								</tr>
+								<% for (var j = 0; j < orders.at(i).get('food_items').length; j++) { %>
+									<% foodItem = orders.at(i).get('food_items').at(j) %>
+									<tr class="food-item">
+										<td>
+											<span class="icon">f</span>
+											<span id="food-item-<%= i %>-name"><%= foodItem.get('food_item').get('name') %></span>
+										</td>
+										<td>
+											<span class="icon">q</span>
+											<span id="food-item-<%= i %>-quantity"><%= foodItem.get('quantity') %></span>
+										</td>
+										<td>
+											<span class="icon">p</span>
+											<span id="food-item-<%= i %>-price"><%= formatPrice(foodItem.get('food_item').get('price')) %></span>
+										</td>
+									</tr>
+								<% } %>
+							<% } %>
+						<% } %>
+					</table>
+				<% } else { %>
+					<p>No one has joined in yet!</p>
+				<% } %>
+			</div>
+		</div>
 	</script>
 	<script id="delivery-initial-html" type="text/template">
 		[Tips]

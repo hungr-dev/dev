@@ -84,7 +84,7 @@ var ResultView = Backbone.View.extend({
 	className: 'result',
 	events: {
 		'click .create-button': 'createDelivery',
-		'click .join-delivery-button': 'joinDelivery'
+		'click .join-button': 'joinDelivery'
 	},
 	initialize: function() {
 		this.wrapper = $('#results-wrapper');
