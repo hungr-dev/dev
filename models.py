@@ -419,7 +419,7 @@ class Search:
                     [searchTerm, searchTerm, searchTerm], one=False)
             restaurant_ids+=[row['id'] for row in q]
 
-        restaurant_ids_ranked = [(freq, id) for id, freq in Counter(restaurant_ids).iteritems()]
+        restaurant_ids_ranked = [(freq, id) for id, freq in Counter(restaurant_ids).iteritems() if id != None]
         restaurant_ids_ranked.sort(reverse=True)
         restaurants_ranked = [Restaurant.get_restaurant_by_id(id) for freq, id in restaurant_ids_ranked]
         return restaurants_ranked

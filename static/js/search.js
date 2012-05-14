@@ -5,6 +5,7 @@ var SearchModel = Backbone.Model.extend({
 	}
 });
 
+var searchTimeout;
 var SearchView = Backbone.View.extend({
 	id: 'search-wrapper',
 	initialize: function(){
@@ -23,11 +24,13 @@ var SearchView = Backbone.View.extend({
 		'keypress #search-box' : 'searchEnter'
 	},
 	searchEnter: function(e){
-		if (e.which === 13){
+		if (searchTimeout != undefined) clearTimeout(searchTimeout);
+		var that = this;
+		searchTimeout = setTimeout(function () {
 			var q = $('#search-box').val();
-			this.search(q);
+			that.search(q);
 			hungr.appRouter.navigate('search/' + q);
-		}
+		}, 250);
 	},
 	search: function(searchTerm){
 		// Clean search term
@@ -36,7 +39,7 @@ var SearchView = Backbone.View.extend({
 
 		// Call search controller
 		$.get('search', {'query': q}, function(data){
-			if (data.results.length > 0){
+			if (data.results.length > 0) {
 				var results_list = [];
 
 				// Empty current results list
@@ -52,7 +55,7 @@ var SearchView = Backbone.View.extend({
 					results_list.push(result_model);
 				}
 
-			var result_collection = new ResultCollection(results_list);
+				var result_collection = new ResultCollection(results_list);
 			}
 		});
 	},

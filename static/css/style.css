@@ -59,11 +59,19 @@ input {
 		border-top: 1px solid rgba(255, 255, 255, 0.4);
 		border-bottom: 1px solid #032a3a;
 	}
+		#search-wrapper h1 {
+			float: left;
+			line-height: 1.6;
+			padding: 0;
+			margin: 0 25px 0 0;
+			color: #f5f5f5;
+			text-shadow: 0 -2px 1px rgba(0, 0, 0, 0.5);
+		}
 		#search-wrapper input {
 			color: #fff;
 			padding: 9px 9px 4px;
 			font-size: 1.2em;
-			width: 99%;
+			width: 73%;
 			background: #607989;
 			outline: none;
 			border: 1px solid #053d60;
