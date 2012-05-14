@@ -5,6 +5,7 @@ from contextlib import closing
 import json
 from models import Address, Delivery, FoodItem, Restaurant, Search, Order
 import urlparse 
+import stripe
 
 DATABASE = os.path.join(os.path.dirname(__file__),"db","hungr.db")
 app = Flask(__name__)
@@ -19,6 +20,19 @@ def quans_scrape():
 
     update_db('INSERT INTO food_items (name, price, restaurant_id) VALUES (?,?,?)',(food,price,5))
     return jsonify(foo='bar')
+
+@app.route('/stripe_form', methods=['GET','POST'])
+def stripe_form():
+    stripe.api_key = 'S3fvQ38xFzJKWaKSVz4oZw6YZZ5S9FAD'  #this is the secret api key (this one is the test key)
+    token = request.form['stripeToken']
+    print "stripe token:",token
+    stripe.Charge.create(
+        amount=100, #price in cents
+        currency="usd",
+        card=token,
+        description="Charge for hungr-dev@mit.edu"  #optional field
+    )
+    return render_template('form.html')
 
 @app.route('/',methods=['GET'])
 def hungr():
