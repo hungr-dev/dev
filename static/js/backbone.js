@@ -1,3 +1,9 @@
+/**
+ * Note to 6.170 graders:
+ * This file was written by Jeremy Ashkenas and open-sourced,
+ * and it has not been touched by our team.
+ */
+
 //     Backbone.js 0.9.2
 
 //     (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.

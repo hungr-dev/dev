@@ -1,3 +1,8 @@
+/**
+ * Note to 6.170 graders:
+ * This file is an open-source library that our team did not write.
+ */
+
 // Underscore.js 1.3.3
 // (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 // Underscore is freely distributable under the MIT license.

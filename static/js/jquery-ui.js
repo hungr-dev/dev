@@ -1,3 +1,8 @@
+/**
+ * Note to 6.170 graders:
+ * This file is an open-source library that our team did not write.
+ */
+
 /*! jQuery UI - v1.8.20 - 2012-04-30
 * https://github.com/jquery/jquery-ui
 * Includes: jquery.ui.core.js

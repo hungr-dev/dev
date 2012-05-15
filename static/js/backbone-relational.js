@@ -1,3 +1,9 @@
+/**
+ * Note to 6.170 graders:
+ * The majority of this file was written by Paul Uithol and open-sourced.
+ * I (Kamran Khan) have made modifications to make it work with our project.
+ */
+
 /** 
  * Backbone-relational.js 0.5.0
  * (c) 2011 Paul Uithol
