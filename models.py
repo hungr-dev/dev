@@ -102,12 +102,13 @@ class Delivery:
         for o in query_db("SELECT id FROM orders WHERE delivery_id = ?", [id], one=False):
             self.orders.append(Order.get_order_by_id(o['id']))
 
+    #we include these serializable functions to make it easy for json to process. Json.dump handles dictionaries well, doesn't handle lists or objects well... 
     def serializable(self):
         d = self.__dict__
         d['restaurant'] = Restaurant.get_restaurant_by_id(self.restaurant_id).serializable()
         d['orders'] = [order.serializable() for order in self.orders]
         d['member'] = User.get_user_by_userid(self.creator_member_id).serializable()
-        print d
+        
         return d
 
     @staticmethod
@@ -184,12 +185,15 @@ class Order:
                          [id], one=True)
         return Order(order['id'], order['delivery_id'], order['member_id'])
 
+    #this is a little awkward, but a good hack to fix. we really have two different "fooditem" objects
+    #"fooditem" which is purely a restaurantid, name, and price
+    # and 'fooditemandquantity' which is a fooditem but also with a quantity, which is a line item in an order/delivery
     @staticmethod 
     def add_fooditems_and_quantity_to_order(orderid, fooditemsAndQuantities):
         order = Order.get_order_by_id(orderid)
         order.deleteAllFoodItems();
         for fq in fooditemsAndQuantities:
-            print fq
+            
             FoodItem.associate_fooditem_with_order(fq['id'], orderid, fq['quantity'])
         return True
 
@@ -268,27 +272,14 @@ class FoodItem:
             out.append(FoodItemAndQuantity(FoodItem.get_food_item_by_id(food_id), fq['quantity']))
         return out
     
-  
-#    @staticmethod
-#    def create_fooditem(name, price, restaurantid):
-#        query = "INSERT into food_items (name, price, restaurant_id) VALUES\
-#	        (?,?,?)"
-#        update_db(query, [name, price, restaurantid])
-#        query = "select last_insert_rowid() as fooditemid from food_items"
-#        result = query_db(query, [], one=True)
-#        return result['fooditemid']
-
+ 
+    #necessary since order_food_items is a separate table 
     @staticmethod
     def associate_fooditem_with_order(fooditemid, orderid, quantity):
         query = "INSERT INTO order_food_items (order_id, food_item_id, quantity) VALUES (?, ?, ?)"
         update_db(query, [orderid, fooditemid, quantity])
         return True
 
-#    @staticmethod
-#    def update_fooditem(fooditemid, param, value):
-#        query = "UPDATE food_items SET "+param+" = ? WHERE id = ?"
-#        update_db(query, [value, fooditemid])
-#        return True
 
 class User:
     """
