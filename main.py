@@ -38,7 +38,7 @@ def stripe_form():
 @app.route('/',methods=['GET'])
 def hungr():
     if 'id' in session.keys():
-        return render_template('twopane.html')
+        return render_template('index.html')
     else:
         return render_template('login.html')
 
