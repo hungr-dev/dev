@@ -7,7 +7,7 @@ from contextlib import closing
 from collections import Counter
 
 ###############################################################################
-DATABASE = os.path.join(os.path.dirname(__file__),"db","hungrTesting.db")
+DATABASE = os.path.join(os.path.dirname(__file__),"../db","hungrTesting.db")
 db = sqlite3.connect(DATABASE)
 
 # changed to isolate testing environment

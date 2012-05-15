@@ -1,4 +1,4 @@
-from modelsTesting import *
+from models import *
 import sqlite3
 import os
 
@@ -44,4 +44,6 @@ assert len(search1result) == 2
 
 search2 = Search(['%chicken%', '%pad thai%', '%chinese%'])
 search2result = search2.search_db()
-assert len(search2result) ==5
+assert len(search2result) == 5
+
+print 'OK!'
