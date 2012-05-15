@@ -1,0 +1,21 @@
+<script id="search-html" type="text/template">
+  <h1>hungr</h1>
+  <input id="search-box" type="text" placeholder="Enter restaurants, cuisines, foods, etc."/> 
+</script>
+
+<script id="result-html" type="text/template">
+  <div class="result-text">
+    <div class="result-name"><%= result_name %></div>
+    <div class="result-address"><%= result_address_city %></div>
+    <div class="result-cuisines"><%= result_cuisines %><% if (result_food_items !== '') { %>: <% } %><%= result_food_items %></div>
+  </div>
+  <div class="result-buttons">
+    <% _.each(result_deliveries, function(delivery){ %>
+      <a class="join-button" id=<%= delivery[0] %> >
+        <%= delivery[1] %>
+      </a>
+    <% }); %>
+    <a class="create-button">Start new</a>
+  </div>
+  <div class="clearer"></div>
+</script>
