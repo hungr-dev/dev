@@ -1,4 +1,4 @@
-dev
-===
+hungr
+=====
 
-development folder
+Hungr provides a quick and easy way to collaboratively order food.

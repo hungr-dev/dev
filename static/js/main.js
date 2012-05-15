@@ -1,54 +1,16 @@
+// This global object holds our application's settings, etc.
 var hungr = {};
 
-/**
- * Helper functions
- */
-var formatTelephone = function(telephone) {
-	return '(' + telephone.substr(0, 3) + ') ' + telephone.substr(3, 3) + '-' + telephone.substr(6, 4);
-}
-var formatPrice = function(price) {
-	var cents = (parseFloat(price) * 100) % 100;
-	var dollars = parseInt(price);
-
-	if (cents < 10) {
-		cents = '0' + cents;
-	}
-
-	return '$' + dollars + '.' + cents;
-}
-var JSON = JSON || {};
-JSON.stringify = JSON.stringify || function (obj) {
-	var t = typeof (obj);
-	if (t != "object" || obj === null) {
-		// simple data type
-		if (t == "string") obj = '"'+obj+'"';
-		return String(obj);
-	}
-	else {
-		// recurse array or object
-		var n, v, json = [], arr = (obj && obj.constructor == Array);
-		for (n in obj) {
-			v = obj[n]; t = typeof(v);
-			if (t == "string") v = '"'+v+'"';
-			else if (t == "object" && v !== null) v = JSON.stringify(v);
-			json.push((arr ? "" : '"' + n + '":') + String(v));
-		}
-		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
-	}
-};
-var magic = 22801765351;
-var idToCode = function(id) {
-	return (parseInt(id) * magic).toString(36);
-}
-var codeToId = function (code) {
-	return parseInt(code, 36) / magic;
-}
-
+// Initialize the variables our application will need on startup:
 hungr.init = function(){
+	// Initialize BB views, models, and a router:
 	hungr.deliveryView = new DeliveryView();
 	hungr.searchModel = new SearchModel({deliveryView: hungr.deliveryView})
 	hungr.searchView = new SearchView({model: hungr.searchModel});
 	hungr.appRouter = new AppRouter();
+
+	// Fetch information about the current member:
+	// TODO: make this asynchronous somehow?
 	$.ajax('current_member', {
 	  success: function (data) {
 	    hungr.currentMember = new MemberModel();
@@ -61,16 +23,13 @@ hungr.init = function(){
 	});
 };
 
-$(document).ready(function(){
-	hungr.init();
-	Backbone.history.start();
-});
-
+// Define the application's router and routes:
 var AppRouter = Backbone.Router.extend({
 	routes: {
 		'search/:query': 'search',
 		'delivery/:code': 'delivery'
 	},
+	// Super simple functionality for both:
 	search: function(query) {
 		hungr.searchView.search(query);
 		hungr.searchView.updateSearchDisplay(query);
@@ -82,7 +41,9 @@ var AppRouter = Backbone.Router.extend({
 	}
 });
 
-var truncateString = function(str){
-	var length = 100;
-	return  str.substring(0, 100) + '...';
-};
+// ...and, finally, on document ready:
+$(document).ready(function(){
+	// Start the app up!
+	hungr.init();
+	Backbone.history.start();
+});
